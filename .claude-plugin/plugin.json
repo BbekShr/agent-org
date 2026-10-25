@@ -1,0 +1,8 @@
+{
+  "name": "agent-org",
+  "version": "0.1.0",
+  "description": "Generate a CEO-led agent org for any project: tailored specialist agents, a /<project>-ceo orchestrator, org memory, guard hooks, and evals, with autonomy earned on a measured trust curve.",
+  "author": { "name": "Bibek Shrestha" },
+  "license": "MIT",
+  "keywords": ["agents", "orchestration", "ceo", "multi-agent", "autonomy", "evals"]
+}

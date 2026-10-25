@@ -1,0 +1,14 @@
+{
+  "name": "agent-org",
+  "description": "Generate a CEO-led agent org for any project.",
+  "owner": {
+    "name": "Bibek Shrestha"
+  },
+  "plugins": [
+    {
+      "name": "agent-org",
+      "source": "./",
+      "description": "Generate a CEO-led agent org for any project, with autonomy earned on a measured trust curve."
+    }
+  ]
+}

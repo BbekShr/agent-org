@@ -1,0 +1,27 @@
+{
+  "agent_org_version": "{{AGENT_ORG_VERSION}}",
+  "generated": "{{DATE}}",
+  "project": "{{PROJECT}}",
+  "slug": "{{SLUG}}",
+  "size": "{{ORG_SIZE}}",
+  "ceo_skill": "{{SLUG}}-ceo",
+  "base_branch": "{{BASE_BRANCH}}",
+  "branch_prefix": "{{BRANCH_PREFIX}}",
+  "autonomy_level": "{{AUTONOMY_LEVEL}}",
+  "autonomy_target": "{{AUTONOMY_TARGET}}",
+  "models": { "top": "{{MODEL_TOP}}", "mid": "{{MODEL_MID}}", "small": "{{MODEL_SMALL}}" },
+  "gates": [
+    { "name": "typecheck", "cmd": "npx tsc --noEmit", "when": "always", "cheap": true }
+  ],
+  "gate_files": ["tsconfig.json"],
+  "protected_paths": ["CLAUDE.md", ".github/workflows/**", ".env*"],
+  "agents": [
+    { "name": "{{SLUG}}-release-manager", "access": "report-only", "role": "release-manager", "perimeter": [] }
+  ],
+  "default_owner": "{{DEFAULT_OWNER}}",
+  "modes": ["audit", "light", "deep", "id"],
+  "guard": {
+    "block_stash": true,
+    "stop_check": { "cmd": "", "watch": ["src"], "extensions": [".ts", ".tsx"] }
+  }
+}
