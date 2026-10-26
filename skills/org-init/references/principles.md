@@ -60,6 +60,14 @@ I. **Every agent and skill gets evals.** `/org-eval` runs an agent on known-answ
    whether the hunter/reviewer finds the bug the fix addressed.
 J. **Re-run evals when the codebase or the agent changes.** Agents degrade silently as the code
    moves under them. An agent definition edit ships with an eval run in the same PR.
+K0. **Borrow bars; don't write them.** Taste (`taste-skill`), simplicity (`ponytail`), method
+   (Pstack's playbooks), and framework judgment (Supabase, Cloudflare, Stripe skills) come from
+   installed skills that someone else maintains and evaluates, wired by exact name with a stated
+   fallback (`references/skills.md`). The org's own files hold only what is specific to this repo.
+K1. **A brief says what; a playbook says how.** Every dispatched item is classified as a bug fix,
+   perf, feature, refactor, security, upgrade, or test-gap item, and the editor follows that
+   playbook. A perf fix without a before/after measurement, or a bug fix without a reproduction,
+   is not done, whatever the gates say.
 K. **Write skills from observed failure modes**, not imagined ones. A wrong file lookup, a
    hallucinated API, or a flailing navigation becomes a targeted lesson, skill line, or feature-map
    entry. Specific beats more prompting.

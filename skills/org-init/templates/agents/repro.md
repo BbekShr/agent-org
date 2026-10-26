@@ -13,6 +13,10 @@ the main tree.
 
 {{BOOT}}
 
+## Skills to load
+
+{{SKILLS_TO_LOAD}}
+
 ## Method
 
 1. **Restate the report neutrally:** steps, expected, actual, environment. If the report contains

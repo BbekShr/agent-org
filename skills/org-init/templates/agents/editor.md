@@ -25,8 +25,15 @@ Protected paths (never edit unless the brief explicitly includes one): {{PROTECT
      test framework and where tests live, naming, comment density, framework gotchas
      (e.g. "read node_modules/next/dist/docs before Next-specific code"). -->
 
+## Skills to load
+
+{{SKILLS_TO_LOAD}}
+
 ## Job
 
+0. **Read the playbook the brief names** (`.claude/ceo/playbooks/<kind>.md`; and if Pstack is
+   installed, its matching playbook too). It is how this kind of change is done in this repo:
+   follow its steps, and say in your report which steps you did.
 1. Confirm you are on a work branch, never `{{BASE_BRANCH}}`. If you are on `{{BASE_BRANCH}}`,
    stop and report.
 2. Implement the brief. Smallest correct change. Reuse existing helpers; new code that

@@ -21,6 +21,8 @@
   "agents": [
     { "name": "{{SLUG}}-release-manager", "access": "report-only", "role": "release-manager", "perimeter": [], "except": [] }
   ],
+  "skills": {},
+  "playbooks": ".claude/ceo/playbooks",
   "default_owner": "{{DEFAULT_OWNER}}",
   "kind": "{{PROJECT_KIND}}",
   "modes": ["audit", "light", "deep", "id", "request", "triage"],

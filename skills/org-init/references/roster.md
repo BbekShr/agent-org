@@ -57,9 +57,9 @@ Each editor writes the test for its own fix. Name the default owner for anything
 | `app-explorer` | a runnable app that can be driven (browser pane, Playwright, simulator) for an `e2e` mode | mid |
 | `repro` | always: reproduces bug reports on current main via the verify skill (powers `triage`; always-on in the cloud at L4) | mid |
 
-Critics grade against a named bar. If a matching skill is installed (e.g. `taste-skill` for
-design, `ponytail` for simplicity, `dataviz` for charts), the critic loads it via the Skill tool
-instead of working from memory. Check the installed-skills list during discovery.
+Critics grade against a named bar, and editors write against one. Which installed skill each
+role loads (ponytail, taste-skill, dataviz, Pstack, framework skills, ...) is decided by
+`references/skills.md`, not by memory. Every match is wired by exact name, with a fallback.
 
 ## Pipeline agents (`full` size, or on demand)
 

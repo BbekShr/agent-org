@@ -111,6 +111,9 @@ no reopening a deferred item without new evidence.
    closed / reverted). A new revert or an escaped defect is a demotion trigger: act on it now.
 6. Read `.claude/ceo/backlog.md`, `.claude/ceo/memory/codebase.md`, and the `## Active` section of
    `.claude/ceo/learnings/_shared.md`.
+   **Skills check:** every skill in `org.json` → `skills` must still be installed (compare with
+   this session's skill list). A missing one isn't a hard stop: the agents use their stated
+   fallback, and the report says "degraded: `<skill>` not installed".
 7. **Org self-check:** run `python3 .claude/ceo/bin/org_doctor.py .`. Errors are org-drift findings you own (rank 6).
 8. If dependencies are missing (`node_modules`/venv absent), install them once before gates.
 9. Record the baseline: run the cheap gates on `{{BASE_BRANCH}}` so a later red is attributable.
@@ -136,13 +139,17 @@ Merge findings. Dedupe against each other and the backlog. Re-verify the top can
 at their `file:line`: a finding you can't confirm doesn't ship. Assign one owner each, rank by
 the objective function, and apply the cap: `light` 1-3 fixes; `deep` and `<ID>` uncapped but
 one logical change per commit. `audit` stops here and writes the report.
+**Classify each selected item into one playbook kind** (bug fix, perf, feature, refactor,
+security, upgrade, test gap; see `.claude/ceo/playbooks/README.md`). An item that is two kinds
+becomes two dispatches, refactor first.
 
 ### 3. Build (apply modes)
 For each selected item, sequentially unless the items' files are disjoint:
 1. Create or reuse branch `{{BRANCH_PREFIX}}<mode>-<YYYY-MM-DD>` (or `{{BRANCH_PREFIX}}<ID>-<slug>`)
    off `{{BASE_BRANCH}}`. Never commit to `{{BASE_BRANCH}}`.
 2. Simple item (one perimeter, obvious fix): dispatch the owning editor with the scoped finding,
-   the proving-test requirement, and the cheap gates.
+   **the playbook to follow** (`.claude/ceo/playbooks/<kind>.md`, plus the matching Pstack
+   playbook if it's installed), the proving-test requirement, and the cheap gates.
    Hard item: {{HARD_ITEM_PIPELINE}}
 3. Parallel editors on disjoint items each get `isolation: "worktree"` and run only cheap gates.
 
@@ -150,6 +157,9 @@ For each selected item, sequentially unless the items' files are disjoint:
 Launch together: {{REVIEW_ROSTER}} AND `{{SLUG}}-release-manager` with the feature-specific check
 derived from the item's acceptance criteria.
 
+- **Your own skill passes run in the same message**, where installed: {{CEO_REVIEW_SKILLS}}.
+  Their findings get the same treatment as a lens's: CONFIRMED gets fixed, PLAUSIBLE gets
+  verified or dismissed by you.
 - **Name your own design decisions in the review brief as claims to attack.** When a lens finds
   that your decision was the defect, say so in the fix dispatch ("you are fixing the CEO's design
   error, not your own work").
@@ -169,6 +179,7 @@ derived from the item's acceptance criteria.
   open items**: those are the human's.
 - Fold agents' `FACT:` lines into `.claude/ceo/memory/codebase.md` (dated, with `file:line` and the
   run id). Delete facts that were falsified.
+- {{CEO_RECORDS_SKILLS}}
 - Fold `LESSON:` lines into `.claude/ceo/learnings/` (`_shared.md` if cross-cutting). Keep each
   `## Active` ≤ ~30 lines; demote still-true lessons to `## Archive`, never delete one to hit a count.
 - Append one line to `.claude/ceo/memory/retros.md` (micro-retro, below) and one row per PR to
