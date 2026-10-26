@@ -136,6 +136,12 @@ Using `roster.md`, produce and present (as one compact message, not a file dump)
   runtime report). If the project can't be run or inspected at all, the first seed item builds
   that, and the verify skill says plainly what's missing.
 
+**Feedback (opt-in, off by default).** In the Phase 4 summary, add one line: "Share template
+findings with agent-org? Off unless you say yes: findings are always recorded locally in
+`.claude/ceo/upstream.md`, and with feedback on, `/org-feedback` drafts issues or PRs you approve
+one by one, with project details stripped." Set `feedback.enabled` from the answer; no answer
+means `false`. Never turn it on by default or on your own.
+
 Model tiers: top = `opus` (or the newest top model available), mid = `sonnet`, small = `haiku`,
 unless the user named others. Ask for a yes or edits. Apply edits and proceed. Don't re-ask.
 
@@ -166,6 +172,7 @@ local tool; add the project's own: e.g. "never submit an application on the user
 | `.claude/ceo/org.json` | `templates/org/org.json`, filled with the real gates, gate files, protected paths, agents (name, access, role, perimeter globs), modes, and `guard.stop_check` (the cheapest meaningful check, e.g. typecheck, or `""` if none) |
 | `.claude/ceo/{README,backlog,feature-map}.md`, `memory/*`, `learnings/*` | `templates/org/` (`feature-map.md` only for UI projects) |
 | `.claude/ceo/.gitignore` | `templates/org/gitignore` |
+| `.claude/ceo/upstream.md` | `templates/org/upstream.md` (the local outbox for template findings) |
 | `.claude/ceo/PRINCIPLES.md`, `.claude/ceo/AUTONOMY.md` | copy `references/principles.md`, `references/autonomy.md` verbatim |
 | `.claude/ceo/evals/` | see Phase 6 |
 | `.claude/hooks/org_guard.py` | `templates/hooks/org_guard.py` (verbatim) |
@@ -238,7 +245,8 @@ For a repo that already has a CEO skill and agents (e.g. `.claude/ceo/backlog.md
 existing agent's domain knowledge, backlog, learnings, or reports.
 1. Inventory what exists and map it onto the layout above (backlog, learnings, reports, PAUSE,
    ownership map, modes).
-2. Generate only what's missing: `org.json` (derived from the existing skill and agents),
+2. Generate only what's missing: `org.json` (derived from the existing skill and agents; ask the
+   feedback opt-in question as in Phase 4), `upstream.md`,
    `AUTONOMY.md`, `PRINCIPLES.md`, `memory/scorecard.md` (backfilled from `gh pr list` of past CEO
    PRs if possible), the guard hook (merged alongside any existing hooks, never replacing them),
    and seed evals.

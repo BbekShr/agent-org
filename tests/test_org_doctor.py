@@ -145,6 +145,22 @@ class DoctorTest(unittest.TestCase):
         code, out = self.doctor()
         self.assertFalse(any("Skill tool" in e for e in out["errors"]), out)
 
+    def test_feedback_config(self):
+        self.org["feedback"] = {"enabled": "yes"}
+        self.save()
+        self.assertError("feedback.enabled")
+        self.org["feedback"] = {"enabled": True, "upstream": "not a repo"}
+        self.save()
+        self.assertError("owner/repo")
+        self.org["feedback"] = {"enabled": True, "upstream": "BbekShr/agent-org"}
+        self.save()
+        code, out = self.doctor()
+        self.assertFalse(any("feedback" in e for e in out["errors"]), out)
+        self.assertTrue(any("upstream.md is missing" in w for w in out["warnings"]))
+        write(self.root, ".claude/ceo/upstream.md", "# Upstream outbox\n")
+        code, out = self.doctor()
+        self.assertFalse(any("upstream.md" in w for w in out["warnings"]), out)
+
     def test_unfilled_placeholder(self):
         write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="{{CONVENTIONS}}"))
         self.assertError("unfilled placeholders")

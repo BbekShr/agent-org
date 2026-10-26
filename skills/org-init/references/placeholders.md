@@ -19,6 +19,7 @@ cut the surrounding line.
 | `AUTONOMY_LEVEL` / `AUTONOMY_TARGET` | from Phase 2 and the interview (see autonomy.md) |
 | `MODEL_TOP` / `MODEL_MID` / `MODEL_SMALL` | `opus` / `sonnet` / `haiku` unless the user said otherwise |
 | `MODEL_CRITIC` | `MODEL_TOP` for design/AI-quality critics (taste is judgment), else `MODEL_MID` |
+| `FEEDBACK_ENABLED` | `true` only if the user said yes to sharing template findings (Phase 4); otherwise `false` |
 | `NORTH_STAR` | one sentence: what the project must do for whom (interview) |
 | `PRIORITY_ORDER` | e.g. "Correct > Fast > Beautiful" or "Stable > Lean > AI-maintainable" |
 | `DEFINITION_OF_DONE` | what "works" means beyond green gates, e.g. "works on desktop (1280) AND mobile (375)"; "runs under strict CSP and SSR"; "`npm test` green and the CLI's `--help` example runs" |

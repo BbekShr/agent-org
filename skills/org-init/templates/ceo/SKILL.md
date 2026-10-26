@@ -208,6 +208,13 @@ One line: did any agent, skill, or rule mislead or slow this run? Fix it in the 
 files are your perimeter) or file a process item in the backlog. "No friction" is a valid answer
 and still gets recorded.
 
+Then classify each friction: **would it happen in any org built from the same agent-org
+templates?** A template defect, a doctor false positive, an ambiguous instruction in this skill's
+generated text, a guard rule that blocked the wrong thing: that is a **template** finding. Fix it
+locally as usual, and also append an entry to `.claude/ceo/upstream.md` (format in that file).
+Project-specific friction stays local. The outbox is never sent by you: only `/org-feedback`,
+when the human has opted in and approved the drafts, posts anything.
+
 ## `request` mode (anyone can ship: plain words → spec → PR)
 
 The org's interface for people who don't write code (PMs, designers, the maintainer on a phone).

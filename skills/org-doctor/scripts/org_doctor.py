@@ -79,6 +79,7 @@ class Doctor:
         self.check_evals(org)
         self.check_skills(org)
         self.check_playbooks(org)
+        self.check_feedback(org)
         if os.path.exists(self.p(".claude", "ceo", "PAUSE")):
             self.info.append("kill switch is ON (.claude/ceo/PAUSE present): every CEO mode aborts")
         return org_path
@@ -322,6 +323,22 @@ class Doctor:
         for kind in ("README",) + PLAYBOOK_KINDS:
             if not os.path.exists(os.path.join(pdir, kind + ".md")):
                 self.err(f"playbook {self.rel(os.path.join(pdir, kind + '.md'))} is missing")
+
+
+    def check_feedback(self, org):
+        fb = org.get("feedback")
+        if fb is None:
+            self.info.append("feedback: not configured (off); template findings stay local")
+        else:
+            enabled = fb.get("enabled")
+            if not isinstance(enabled, bool):
+                self.err("org.json feedback.enabled must be true or false")
+            elif enabled and not re.fullmatch(r"[\w.-]+/[\w.-]+", str(fb.get("upstream", ""))):
+                self.err("feedback is enabled but feedback.upstream is not an owner/repo")
+            else:
+                self.info.append(f"feedback: {'on (opt-in), sends only via /org-feedback' if enabled else 'off'}")
+        if not os.path.exists(self.p(".claude", "ceo", "upstream.md")):
+            self.warn(".claude/ceo/upstream.md is missing: template findings from micro-retros have nowhere to go")
 
 
 def main():
