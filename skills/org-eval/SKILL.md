@@ -48,7 +48,9 @@ Kinds:
 2. For each case, in parallel where cases are independent (≤4 at a time; gate cases serially,
    because they bind ports):
    a. `git worktree add --detach <scratchpad>/eval-<id> <base>`. Never use checkout or stash in
-      the main tree. Set up dependencies the way `/<slug>-verify` says.
+      the main tree. Set up dependencies the way `/<slug>-verify` says, **even for read-only
+      cases**: a reviewer that cannot read a library's source guesses its behaviour, and one that
+      reads another checkout's `node_modules` may be reading a different version.
    a2. **Overlay the current org** onto the worktree: copy `.claude/agents/`, `.claude/skills/`
       (the generated ones), and `.claude/ceo/` minus `evals/`, `reports/`, `walks/` from the main
       tree. An old base has no org files, so without the overlay every agent stops at its boot
@@ -69,6 +71,17 @@ Kinds:
 4. Report per agent: pass rate, change versus its previous run, and the failing criteria. An agent
    below 60% is **benched** (the CEO treats it as report-only) until its definition is fixed and
    re-evaluated. Say so plainly.
+
+## Blind runs (`/org-eval <agent> --blind`)
+
+A case built from a defect the org has since written lessons about is a **regression test**: the
+lesson (and often the agent definition) now names the answer, so a pass shows the miss can't
+recur, not that the agent would find a new bug of that class. `--blind` measures the lens itself:
+the agent gets no `## Active` lessons, is told not to read `.claude/ceo/learnings/`, `memory/`,
+the backlog or reports, and any definition line that names the case's answer is removed from a
+scratch copy of the agent file. Report both numbers when a case has both: "regression: PASS,
+blind: FAIL" is the honest picture, and a blind FAIL is a prompt to improve the lens, not to
+weaken the case.
 
 ## Mine (`/org-eval mine`)
 
