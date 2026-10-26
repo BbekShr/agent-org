@@ -20,6 +20,10 @@ Files in this skill (resolve against this skill's directory):
 - `references/roster.md`: which agents to generate and the signals that call for each.
 - `templates/`: agent, CEO, org-state, hook, and schedule templates with `{{PLACEHOLDERS}}`.
 - `references/placeholders.md`: what goes in every placeholder, with size-based defaults.
+- `references/skills.md`: which installed skills (ponytail, taste-skill, Pstack, framework skills,
+  ...) each role loads, and how they're wired.
+- `templates/playbooks/`: per-task-kind playbooks (bug fix, perf, feature, refactor, security,
+  upgrade, test gap).
 
 ## Mode
 
@@ -33,8 +37,8 @@ Files in this skill (resolve against this skill's directory):
    until the user agrees.
 2. Record: base branch (`git symbolic-ref refs/remotes/origin/HEAD` or `main`), whether `gh` is
    authenticated, existing `CLAUDE.md`/`AGENTS.md`, `.claude/settings.json`, `.claude/agents/`,
-   `.claude/skills/`, and the list of installed skills in this session (critics can lean on them:
-   `taste-skill`, `ponytail`, `dataviz`, `ui-ux-pro-max`, `frontend-design`, ...).
+   `.claude/skills/`, and the list of installed skills in this session, with their **exact names**.
+   Match them against `references/skills.md`; Phase 1 decides which matches the project needs.
 3. Work on a branch: `org/bootstrap-<YYYY-MM-DD>`. Never write the org onto the base branch directly.
 
 ## Phase 1: Discover (parallel, read-only: ONE message, 4 Explore agents)
@@ -122,7 +126,12 @@ Using `roster.md`, produce and present (as one compact message, not a file dump)
 - starting autonomy level, target, and why;
 - seed backlog items (from the constraint audit, bans, and the bar check), max ~8;
 - project kind, user-data paths, shipped-artifact handling (Phase 2.6);
-- quality bars: installed skills the org will lean on (from Phase 0) and which agent loads each;
+- skills wiring: every `references/skills.md` match the project needs (exact installed name →
+  the agents that load it, when, the fallback), plus relevant installed skills the registry
+  doesn't know (proposed, wired only on a yes). Note any registry skill worth installing that
+  isn't installed, as a suggestion; never install it yourself;
+- playbooks: whether Pstack is installed (then the playbooks are thin project adapters) or not
+  (then they're the full method), and the project specifics for each playbook;
 - the verify skill outline: setup, start, drive, inspect, evidence, teardown (from Phase 1's
   runtime report). If the project can't be run or inspected at all, the first seed item builds
   that, and the verify skill says plainly what's missing.
@@ -152,6 +161,7 @@ local tool; add the project's own: e.g. "never submit an application on the user
 | `.claude/skills/<slug>-ceo/SKILL.md` | `templates/ceo/SKILL.md`, with the chosen `templates/ceo/modes/*.md` pasted at `{{EXTRA_MODES}}` |
 | `.claude/skills/<slug>-verify/SKILL.md` | `templates/verify/SKILL.md`: the org's runtime eyes and hands, filled from Phase 1's runtime report. Always generated (for a library: build, run the test suite, run the examples, profile a hot path) |
 | `.claude/agents/<slug>-repro.md` | `templates/agents/repro.md`: always generated (it powers `triage`) |
+| `.claude/ceo/playbooks/*.md` | `templates/playbooks/`, each "In this project" section filled from discovery: the real test layout, measurement tools, canonical security helpers, upgrade history. All seven, even when Pstack is installed |
 | `.claude/ceo/RULES.md` | `templates/org/RULES.md`: the org's rules (verification bar, protected paths, user-data paths, critical rules) |
 | `.claude/ceo/org.json` | `templates/org/org.json`, filled with the real gates, gate files, protected paths, agents (name, access, role, perimeter globs), modes, and `guard.stop_check` (the cheapest meaningful check, e.g. typecheck, or `""` if none) |
 | `.claude/ceo/{README,backlog,feature-map}.md`, `memory/*`, `learnings/*` | `templates/org/` (`feature-map.md` only for UI projects) |

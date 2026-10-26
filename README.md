@@ -15,6 +15,12 @@ asks you up to four questions, and generates an org tailored to that project:
 - **A verify skill**, `/<project>-verify`, the org's runtime eyes and hands: how to set up,
   start, drive, and inspect (traces, profiles, snapshots, screenshots) the real software, so
   agents prove their own changes instead of you acting as the go-between.
+- **Skills wired by role**: `ponytail` for every editor (plus `/ponytail-review` on every diff),
+  `taste-skill`/`ui-ux-pro-max` for design work, `dataviz` for charts, Pstack's playbooks for
+  method, and framework skills (Supabase, Cloudflare, Stripe, ...) where the repo uses them, each
+  by exact installed name and with a fallback. See [`skills.md`](skills/org-init/references/skills.md).
+- **Playbooks** for each kind of task (bug fix, perf, feature, refactor, security, upgrade, test
+  gap). They hold this repo's specifics and defer to Pstack's method when it's installed.
 - **Org memory** in `.claude/ceo/`: one backlog, verified facts, per-agent learnings, retros,
   and a scorecard of every PR's fate.
 - **Guard hooks** that make the dangerous shortcuts impossible rather than discouraged.
@@ -90,6 +96,7 @@ CLAUDE.md                         + a 4-line pointer (skipped if CLAUDE.md ships
   ceo/
     org.json                      roster, gates, protected + user-data paths, autonomy level
     RULES.md                      the org's rules (kept out of CLAUDE.md)
+    playbooks/                    how each kind of task is done in this repo
     backlog.md                    the one tracker
     memory/{codebase,retros,scorecard}.md
     learnings/_shared.md          only "## Active" enters agent briefs
