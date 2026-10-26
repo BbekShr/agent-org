@@ -1,0 +1,51 @@
+name: Bug report
+description: Something in the generator, the doctor, the guard, or a generated org doesn't work.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Please don't paste private code, paths, data or secrets from your own projects.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - /org-init (generate or adopt)
+        - /org-doctor
+        - /org-eval
+        - /org-feedback
+        - Guard hook (org_guard.py)
+        - A generated CEO skill or agent
+        - Website or docs
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran and what it did.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Output, doctor report, or the guard's message. Paste as text.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: agent-org version
+      description: From .claude-plugin/plugin.json, or agent_org_version in your org.json.
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Claude Code version, Python version.
