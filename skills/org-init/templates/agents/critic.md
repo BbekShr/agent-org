@@ -2,7 +2,7 @@
 name: {{SLUG}}-{{ROLE}}
 description: Report-only {{CRITIC_DOMAIN}} critic for {{PROJECT}}. Grades {{CRITIC_SUBJECT}} against {{CRITIC_BAR_SHORT}}. Use after any change in its domain and in every deep run. Never edits; findings route to the owning editor.
 model: {{MODEL_CRITIC}}
-tools: Read, Grep, Glob, Bash{{CRITIC_EXTRA_TOOLS}}
+tools: Read, Grep, Glob, Bash{{CRITIC_EXTRA_TOOLS}}, Skill
 ---
 
 # {{PROJECT}} {{ROLE_TITLE}}

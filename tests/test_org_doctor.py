@@ -134,6 +134,17 @@ class DoctorTest(unittest.TestCase):
         code, out = self.doctor()
         self.assertFalse(any("does not exist" in w for w in out["warnings"]), out["warnings"])
 
+    def test_skill_wired_agent_needs_skill_tool(self):
+        self.org["skills"] = {"ponytail": {"agents": ["demo-release-manager"], "when": "x", "fallback": "y"}}
+        self.save()
+        write(self.root, ".claude/agents/demo-release-manager.md",
+              agent("demo-release-manager", "Bash, Read, Grep", body="Load `ponytail`."))
+        self.assertError("no Skill tool")
+        write(self.root, ".claude/agents/demo-release-manager.md",
+              agent("demo-release-manager", "Bash, Read, Grep, Skill", body="Load `ponytail`."))
+        code, out = self.doctor()
+        self.assertFalse(any("Skill tool" in e for e in out["errors"]), out)
+
     def test_unfilled_placeholder(self):
         write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="{{CONVENTIONS}}"))
         self.assertError("unfilled placeholders")

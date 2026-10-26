@@ -303,6 +303,11 @@ class Doctor:
                     text = open(path, encoding="utf-8").read()
                 except OSError:
                     continue  # missing agent file is already an error
+                fm, _ = self.frontmatter(path)
+                tools = {t.strip() for t in (fm or {}).get("tools", "").split(",") if t.strip()}
+                if tools and "Skill" not in tools:
+                    self.err(f"skill `{skill}` is wired to `{agent_name}`, but its `tools:` line has no "
+                             "Skill tool, so it can never load it")
                 if f"`{skill}`" not in text:
                     self.warn(f"skill `{skill}` is wired to `{agent_name}` in org.json, but its agent "
                               "file never names it, so the agent won't load it")
