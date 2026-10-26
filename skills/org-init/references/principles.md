@@ -2,8 +2,9 @@
 
 These are distilled from four production agent orgs (a 19k-row web directory, a React Native AI
 travel app, a photo-sharing web app, a zero-dependency chart library, and their predecessors).
-Each rule exists because an incident made it necessary. When you generate an org, carry the
-rule AND its one-line reason: an agent follows a rule it understands, and routes around one it
+Many of these rules trace to a specific incident in those orgs; the rest come from published
+practice on running agents at scale. When you generate an org, carry the rule AND its one-line
+reason: an agent follows a rule it understands, and routes around one it
 doesn't.
 
 ## The core principle
