@@ -51,7 +51,9 @@ role, and wires them only on the user's yes.
 
 ## What `/org-init` writes
 
-- `org.json` → `"skills": { "<exact installed name>": { "role": ["<agent>", ...], "when": "...", "fallback": "..." } }`
+- `org.json` → `"skills": { "<exact installed name>": { "agents": ["<agent>", ...], "when": "...", "fallback": "..." } }`
+  (CEO-only skills: `"agents": [], "ceo": true`). Every agent listed must have `Skill` in its
+  `tools:` line, or it can't load anything; the doctor fails on that.
 - In each agent that loads skills, a `## Skills to load` section listing the exact names, when to
   load each, and the fallback.
 - In the CEO skill, the `## Quality bars` section: which skills the org leans on, who loads

@@ -247,6 +247,13 @@ existing agent's domain knowledge, backlog, learnings, or reports.
    as a small, separate edit, and apply only the ones the user accepts.
 4. The starting autonomy level for an adopted org can be backfilled from its real PR history
    using the promotion criteria. State the evidence.
+5. **Don't break existing workflows.** Read every existing hook, and grep the existing skills for
+   commands the guard blocks (`gh pr merge`, `git push`, `git stash`, `--no-verify`). Where an
+   existing hook already does a guard job (a gate-config edit guard, a Stop-hook typecheck), keep
+   it, set the matching `org.json` option off (`gate_files: []` or `guard.stop_check.cmd: ""`), and
+   register only the guard modes that add something. Never run two hooks that do the same job.
+6. **Respect the project's own style rules** in everything you write into it (e.g. a "no em
+   dashes" rule applies to copied `PRINCIPLES.md` too).
 
 ## Upgrade (re-sync with newer templates)
 

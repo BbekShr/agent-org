@@ -49,7 +49,7 @@ An org starts at L0 or L1, depending on whether the project's tests and checks c
 prove a change correct. The CEO proposes a promotion when the scorecard meets the criteria in
 [`autonomy.md`](skills/org-init/references/autonomy.md), and **only you raise the level**. A
 revert or escaped defect demotes the org automatically. The guard hook enforces this
-mechanically: below L3, `gh pr merge` is blocked.
+mechanically during org runs: below L3, `gh pr merge` is blocked for the CEO and its agents (your own sessions are never restricted).
 
 ## Install
 

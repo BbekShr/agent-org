@@ -99,8 +99,51 @@ class DoctorTest(unittest.TestCase):
 
     def test_ceo_dispatches_unknown_agent(self):
         write(self.root, ".claude/skills/demo-ceo/SKILL.md",
-              "---\nname: demo-ceo\ndescription: CEO\n---\n`demo-frontend-engineer` `demo-release-manager` `demo-ghost`\n")
+              "---\nname: demo-ceo\ndescription: CEO\n---\n`demo-frontend-engineer` `demo-release-manager`\nSpawn `demo-ghost` for the audit.\n")
         self.assertError("demo-ghost")
+
+    def test_memory_and_skill_names_are_not_dispatches(self):
+        write(self.root, ".claude/skills/demo-verify/SKILL.md", "---\nname: demo-verify\ndescription: v\n---\n")
+        write(self.root, ".claude/skills/demo-ceo/SKILL.md",
+              "---\nname: demo-ceo\ndescription: CEO\n---\nSpawn `demo-frontend-engineer` and `demo-release-manager`.\n"
+              "See the `demo-local-stack` memory and load `demo-verify`.\n")
+        code, out = self.doctor()
+        self.assertEqual(out["errors"], [], out)
+
+    def test_dispatch_of_missing_agent_in_table_row(self):
+        write(self.root, ".claude/skills/demo-ceo/SKILL.md",
+              "---\nname: demo-ceo\ndescription: CEO\n---\nSpawn `demo-frontend-engineer`, `demo-release-manager`.\n"
+              "| `demo-ghost` | report-only | x |\n")
+        self.assertError("demo-ghost")
+
+    def test_edit_mode_not_required_when_gate_files_empty(self):
+        self.org["gate_files"] = []
+        self.save()
+        settings = json.load(open(os.path.join(self.root, ".claude", "settings.json")))
+        settings["hooks"]["PreToolUse"] = [h for h in settings["hooks"]["PreToolUse"] if h["matcher"] == "Bash"]
+        write(self.root, ".claude/settings.json", json.dumps(settings))
+        code, out = self.doctor()
+        self.assertFalse(any("not registered" in e for e in out["errors"]), out)
+
+    def test_relative_and_vendored_refs_resolve(self):
+        write(self.root, ".claude/skills/vendor/x/review/STANDARDS.md", "x")
+        write(self.root, ".claude/ceo/learnings/notes.md", "x")
+        subprocess.run(["git", "add", "-A"], cwd=self.root)
+        write(self.root, ".claude/agents/demo-frontend-engineer.md", agent(
+            "demo-frontend-engineer", body="Grade against `review/STANDARDS.md` and `learnings/notes.md`."))
+        code, out = self.doctor()
+        self.assertFalse(any("does not exist" in w for w in out["warnings"]), out["warnings"])
+
+    def test_skill_wired_agent_needs_skill_tool(self):
+        self.org["skills"] = {"ponytail": {"agents": ["demo-release-manager"], "when": "x", "fallback": "y"}}
+        self.save()
+        write(self.root, ".claude/agents/demo-release-manager.md",
+              agent("demo-release-manager", "Bash, Read, Grep", body="Load `ponytail`."))
+        self.assertError("no Skill tool")
+        write(self.root, ".claude/agents/demo-release-manager.md",
+              agent("demo-release-manager", "Bash, Read, Grep, Skill", body="Load `ponytail`."))
+        code, out = self.doctor()
+        self.assertFalse(any("Skill tool" in e for e in out["errors"]), out)
 
     def test_unfilled_placeholder(self):
         write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="{{CONVENTIONS}}"))

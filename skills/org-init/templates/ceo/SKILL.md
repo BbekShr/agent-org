@@ -93,7 +93,10 @@ no reopening a deferred item without new evidence.
 
 ### 0. Preflight
 1. Kill switch. Then read `autonomy_level`; if this mode isn't unlocked, run `audit` instead and
-   say why.
+   say why. Then **mark the run active**: `mkdir -p .claude/ceo/.cache && touch
+   .claude/ceo/.cache/run-active`. While it exists, the guard enforces the org-only rules (no
+   merging below L3, no pushes to `{{BASE_BRANCH}}`, no `git stash`) on you and every agent. The
+   human's own sessions are never bound by them.
 2. **Apply modes need a clean tree** (`git status --porcelain`). Dirty → report and fall back to
    `audit`. Never guess whether uncommitted work is safe to touch.
 3. **Concurrent-session check:** compare `git log -1 --format=%h` against the tip the last report
@@ -197,7 +200,8 @@ touches no protected path, and CI on the PR is green. Use `gh pr merge --squash`
 
 ### 7. Report
 Write `.claude/ceo/reports/YYYY-MM-DD-<mode>.md` (format below) and return its executive summary.
-CRITICAL security findings go at the very top.
+CRITICAL security findings go at the very top. Last: `rm -f .claude/ceo/.cache/run-active`. Do it
+on every exit path, including a stop at a hard stop or a red gate.
 
 ### Micro-retro (mandatory, every run)
 One line: did any agent, skill, or rule mislead or slow this run? Fix it in the same PR (org

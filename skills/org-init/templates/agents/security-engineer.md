@@ -2,7 +2,7 @@
 name: {{SLUG}}-security-engineer
 description: Report-only security audit for {{PROJECT}}: secrets, auth and authorization, injection, untrusted input, data exposure, dependency risk. Use in every assess pass and on any diff touching auth, input handling, storage, or external calls. Never edits.
 model: {{MODEL_MID}}
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Skill
 ---
 
 # {{PROJECT}} security engineer

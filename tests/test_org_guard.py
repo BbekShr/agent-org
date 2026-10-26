@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 GUARD = os.path.join(os.path.dirname(__file__), "..", "skills", "org-init", "templates", "hooks", "org_guard.py")
@@ -20,13 +21,17 @@ class GuardTest(unittest.TestCase):
         with open(os.path.join(self.root, ".claude", "ceo", "org.json"), "w") as f:
             json.dump(org, f)
 
-    def run_guard(self, mode, tool_input):
+    def run_guard(self, mode, tool_input, org_run=True):
+        env = {**os.environ, "CLAUDE_PROJECT_DIR": self.root}
+        env.pop("AGENT_ORG_RUN", None)
+        if org_run:
+            env["AGENT_ORG_RUN"] = "1"
         res = subprocess.run([sys.executable, GUARD, mode], input=json.dumps({"tool_input": tool_input}),
-                             capture_output=True, text=True, env={**os.environ, "CLAUDE_PROJECT_DIR": self.root})
+                             capture_output=True, text=True, env=env)
         return res.returncode
 
-    def bash(self, cmd):
-        return self.run_guard("bash", {"command": cmd})
+    def bash(self, cmd, org_run=True):
+        return self.run_guard("bash", {"command": cmd}, org_run)
 
     def test_blocks_admin_merge(self):
         self.set_org({"autonomy_level": "L4"})
@@ -37,7 +42,7 @@ class GuardTest(unittest.TestCase):
         self.set_org({"autonomy_level": "L3"})
         self.assertEqual(self.bash("gh pr merge 12 --squash"), 0)
 
-    def test_missing_org_defaults_to_no_merge(self):
+    def test_missing_org_defaults_to_no_merge_during_a_run(self):
         os.remove(os.path.join(self.root, ".claude", "ceo", "org.json"))
         self.assertEqual(self.bash("gh pr merge 12"), 2)
 
@@ -52,6 +57,26 @@ class GuardTest(unittest.TestCase):
         self.assertEqual(self.bash("git push origin HEAD:main"), 2)
         self.assertEqual(self.bash("git push -u origin org/main-fix"), 0)
         self.assertEqual(self.bash("git push origin maintenance"), 0)
+
+    def test_human_session_is_not_bound_by_org_rules(self):
+        # Outside an org run, the human's own sessions may merge, push to main and stash.
+        self.assertEqual(self.bash("gh pr merge 12 --squash", org_run=False), 0)
+        self.assertEqual(self.bash("git push origin main", org_run=False), 0)
+        self.assertEqual(self.bash("git stash push -u -m wip", org_run=False), 0)
+        # ...but the always-wrong commands stay blocked for everyone.
+        self.assertEqual(self.bash("gh pr merge 12 --admin", org_run=False), 2)
+        self.assertEqual(self.bash("git push --force origin x", org_run=False), 2)
+        self.assertEqual(self.bash("git commit -m x --no-verify", org_run=False), 2)
+
+    def test_run_marker_activates_and_expires(self):
+        cache = os.path.join(self.root, ".claude", "ceo", ".cache")
+        os.makedirs(cache)
+        marker = os.path.join(cache, "run-active")
+        open(marker, "w").close()
+        self.assertEqual(self.bash("git stash", org_run=False), 2)
+        old = time.time() - 13 * 3600
+        os.utime(marker, (old, old))
+        self.assertEqual(self.bash("git stash", org_run=False), 0)
 
     def test_no_verify(self):
         self.assertEqual(self.bash("git commit -m x --no-verify"), 2)

@@ -1,7 +1,8 @@
 # Autonomy levels (the trust curve)
 
 `org.json` → `"autonomy_level": "L0".."L4"`. The CEO reads it in preflight and refuses anything
-the level doesn't unlock. **Only the human raises the level.** The CEO lowers it itself on a
+the level doesn't unlock. The guard enforces it mechanically during org runs only: a human working
+in their own session can still merge or push as they always have. **Only the human raises the level.** The CEO lowers it itself on a
 demotion trigger, and says so at the top of the report.
 
 | Level | Name | Unlocks | Merge | Schedule |
