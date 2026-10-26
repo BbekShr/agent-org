@@ -1,6 +1,6 @@
 # Org principles (the rules every generated org carries)
 
-These are distilled from five production agent orgs (a 19k-row web directory, a React Native AI
+These are distilled from four production agent orgs (a 19k-row web directory, a React Native AI
 travel app, a photo-sharing web app, a zero-dependency chart library, and their predecessors).
 Each rule exists because an incident made it necessary. When you generate an org, carry the
 rule AND its one-line reason: an agent follows a rule it understands, and routes around one it
