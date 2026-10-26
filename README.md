@@ -74,6 +74,7 @@ Or copy the skills into your user skills directory:
 | `/org-init adopt` | add structure (org.json, autonomy, scorecard, guard, evals) to an existing hand-built CEO/agents setup without losing its content |
 | `/org-init upgrade` | re-sync a generated org with newer templates, keeping local edits |
 | `/org-doctor` | static health check: dead refs, report-only agents with write tools, perimeters that match nothing, unfilled placeholders, memory budgets, guard wiring |
+| `/org-feedback` | opt-in: turn the template findings your org recorded into an issue or PR on agent-org, project details stripped, sent only on your yes |
 | `/org-eval [agent]` | run agents on known-answer cases in throwaway worktrees and grade them with a different model; `/org-eval mine` drafts cases from past fix commits |
 | `/<project>-ceo [audit\|deep\|<ID>\|discover\|rnd\|issues\|e2e]` | the generated CEO |
 | `/<project>-ceo request "add CSV export to the tracker"` | anyone describes a change → spec with acceptance criteria → PR |
@@ -114,6 +115,23 @@ org from it, then reported 23 defects in the skill, from "the org would have shi
 user via the project's self-updater" to "eval agents would stop at boot on old commits". All 23
 are fixed in this version. The generated release manager, running on the small model, then
 passed its smoke test and followed the report contract exactly.
+
+## Feedback (opt-in)
+
+Every org learns things about its own templates: a doctor false positive, a missing tool, an
+instruction that misled an agent. At each run's micro-retro, the CEO sorts friction into
+**local** (fixed in the project) and **template** (would happen in any org). Template findings
+go to a local outbox, `.claude/ceo/upstream.md`. That file never leaves your machine on its own.
+
+If you opt in (`"feedback": {"enabled": true}` in `.claude/ceo/org.json`, or "yes" when
+`/org-init` asks), `/org-feedback` turns new findings into drafts:
+
+- **an issue** when the finding needs a decision, or when you aren't an agent-org maintainer;
+- **a PR** when the fix is concrete and tested, and you are a maintainer.
+
+It re-checks each finding against the current templates (it may already be fixed), merges
+duplicates, strips project names, paths, code and data, and shows you every draft. Nothing is
+posted until you approve it. Once merged, `/org-init upgrade` brings the fix to every org.
 
 ## Development
 

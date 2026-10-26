@@ -23,6 +23,7 @@
   ],
   "skills": {},
   "playbooks": ".claude/ceo/playbooks",
+  "feedback": { "enabled": {{FEEDBACK_ENABLED}}, "upstream": "BbekShr/agent-org" },
   "default_owner": "{{DEFAULT_OWNER}}",
   "kind": "{{PROJECT_KIND}}",
   "modes": ["audit", "light", "deep", "id", "request", "triage"],
