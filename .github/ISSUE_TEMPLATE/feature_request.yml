@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a capability, a new agent role, a mode, or a template change.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What can't you do today, or what goes wrong? Describe the outcome you need.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should agent-org do instead?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: A run, a project kind, or a pattern from another tool that shows the need.

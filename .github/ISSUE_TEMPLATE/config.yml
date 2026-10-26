@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Docs
+    url: https://bbekshr.github.io/agent-org/docs.html
+    about: How agent-org works, commands, and reference.

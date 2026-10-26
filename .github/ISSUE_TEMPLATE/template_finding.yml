@@ -1,0 +1,46 @@
+name: Template finding
+description: Something your org hit that would happen in any org built from the same templates. /org-feedback drafts these for you.
+labels: ["org-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: Describe the project only by kind (for example "a Next.js app on Workers"). No project names, paths, code or data.
+  - type: input
+    id: template
+    attributes:
+      label: Template
+      description: The agent-org file at fault, for example skills/org-init/templates/agents/critic.md
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: agent-org version
+    validations:
+      required: true
+  - type: input
+    id: seen
+    attributes:
+      label: Seen in
+      description: How many runs and orgs, and the project kinds.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is a template problem, not a project one
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      render: text
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change

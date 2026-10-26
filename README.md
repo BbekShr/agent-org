@@ -1,25 +1,68 @@
 # agent-org
 
-**A CEO and a team of specialist agents for any repo, with autonomy earned on evidence.**
+**A Claude Code agent team generated from your repo that earns autonomy on evidence.**
 
-[Website](https://bbekshr.github.io/agent-org/) · [Docs](https://bbekshr.github.io/agent-org/docs.html) · [Principles](skills/org-init/references/principles.md)
+[![license](https://img.shields.io/github/license/BbekShr/agent-org)](LICENSE)
+[![plugin](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FBbekShr%2Fagent-org%2Fmain%2F.claude-plugin%2Fplugin.json&query=%24.version&label=plugin)](.claude-plugin/plugin.json)
+[![tests](https://img.shields.io/github/actions/workflow/status/BbekShr/agent-org/test.yml?branch=main&label=tests)](.github/workflows/test.yml)
+[![dependencies](https://img.shields.io/badge/dependencies-Python%203%20stdlib-0a7650)](#development)
+[![stars](https://img.shields.io/github/stars/BbekShr/agent-org?style=flat)](https://github.com/BbekShr/agent-org/stargazers)
 
-agent-org is a Claude Code plugin. Run `/org-init` in a project and it reads the codebase, asks
-up to four questions, and generates an org fitted to that repo: agents that own real parts of
-your code, agents that only check, a CEO skill that runs them, and the guards, memory and evals
-that let the org earn more autonomy over time.
+<!-- HERO GIF: show, at real speed in a small open-source repo: (1) typing /org-init and the design
+summary appearing (the roster table with builders, the security engineer and the release manager,
+plus "starting level L1"), (2) a cut to /org-doctor printing "0 error(s)", (3) a cut to
+/<project>-ceo audit printing the board report's executive summary. 8 seconds total, no speed-up. -->
 
-It is distilled from four production agent orgs (a 19k-entry web directory, an AI travel app, a
-photo-sharing app, and a chart library). Every rule it generates exists because an incident made
-it necessary.
+[Live site](https://bbekshr.github.io/agent-org/) · [Docs](https://bbekshr.github.io/agent-org/docs.html) · [Install](#quick-start) · [Report a bug](https://github.com/BbekShr/agent-org/issues/new/choose)
 
-> Autonomy comes from **verification + constraints + evals + orchestration**, not from better
-> prompts. Start constrained and local, prove correctness, then scale the team.
+## Why agent-org?
+
+- **Hand off maintenance without handing over the keys.** Agents find, fix and open PRs. Merging
+  stays with you until the org's own track record says otherwise.
+- **A bug that slips past once gets tested forever.** A miss a human caught becomes an eval case,
+  replayed against the agents whenever they change.
+- **Nobody grades their own work.** Builders write code; checkers have no edit tools; a review
+  board and a release gate run on every change.
+- **It fits the repo you have.** Roles, gates and protected paths come from your codebase and the
+  skills you already installed, not from a fixed template.
+- **Your workflow stays yours.** The guard binds the org's runs, never your own sessions, and
+  nothing is pushed without asking.
+
+## Quick start
+
+```
+/plugin marketplace add BbekShr/agent-org
+/plugin install agent-org@agent-org
+
+# then, inside your repo:
+/org-init                 # reads the repo, asks up to 4 questions, works on a branch
+/<project>-ceo audit      # first run: a read-only board report
+```
+
+Install takes about 4 seconds (measured: 3.2s to add the marketplace, 0.5s to install).
+`/org-init` then reads your codebase before asking anything. Stop everything at any time with
+`touch .claude/ceo/PAUSE`.
+
+## How it compares
+
+| | agent-org | [gstack](https://github.com/garrytan/gstack) | [ruflo](https://github.com/ruvnet/ruflo) | [wshobson/agents](https://github.com/wshobson/agents) |
+|---|---|---|---|---|
+| What it is | Generates an agent org for your repo | Garry Tan's setup: 23 opinionated tools | Agent harness: swarms, memory, 314 MCP tools | Catalog: 202 agents, 185 skills |
+| Agents shaped by your codebase | Yes, generated per repo | TODO | TODO | Picked from the catalog |
+| Autonomy levels, enforced by a hook | Yes, L0 to L4 | TODO | TODO | TODO |
+| Evals of the agents themselves | Yes, `/org-eval` | TODO | TODO | TODO |
+| Install | Claude Code plugin | `git clone` + `./setup` (needs Bun) | `npx ruflo init` | Plugin marketplace |
+| Works with | Claude Code | Claude Code and other agents | Claude Code and Codex | 7 coding tools |
+| License | MIT | MIT | MIT | MIT |
+
+Facts about other projects come from their READMEs as of 2026-10-26. TODO means not verified, not
+"no". Corrections are welcome in an issue.
+
+These projects mostly give you more agents. agent-org is about how far to trust the agents you
+have, and proving it.
 
 ## Contents
 
-- [Install](#install)
-- [Quick start](#quick-start)
 - [The team](#the-team)
 - [How a run works](#how-a-run-works)
 - [The trust curve](#the-trust-curve)
@@ -29,46 +72,22 @@ it necessary.
 - [Commands](#commands)
 - [What gets generated](#what-gets-generated)
 - [Validated on real projects](#validated-on-real-projects)
+- [Install without the plugin system](#install-without-the-plugin-system)
 - [Development](#development)
-
-## Install
-
-As a plugin:
-
-```
-/plugin marketplace add BbekShr/agent-org
-/plugin install agent-org@agent-org
-```
-
-Without the plugin system, clone the repo and run `./install.sh` (copies the skills into
-`~/.claude/skills`).
-
-## Quick start
-
-```
-/org-init                 # generate an org for this repo (on a branch; nothing pushed without asking)
-/<project>-ceo audit      # first run: read-only board report
-/<project>-ceo            # light run: fix the top 1-3 items, open a PR
-touch .claude/ceo/PAUSE   # kill switch: stops every mode
-```
-
-Already have a hand-built CEO and agents? Use `/org-init adopt`: it adds the missing structure
-without removing your content.
 
 ## The team
 
-`/org-init` staffs the team from your repo's real structure. Only builders can change code;
-everyone else reports.
+`/org-init` staffs the team from your repo's real structure. Only builders can change code.
 
 | Group | Roles | Access |
 |---|---|---|
-| **CEO** | the `/<project>-ceo` skill: chief of staff, routes work, decides, ships | coordinates |
-| **Builders** | one editor per code area, named after your seams: frontend, backend, mobile, data, AI, prompt engineer | write code |
-| **Checkers** | **security engineer** (always), release manager (always), reviewers one per lens, silent-failure hunter, critics (design, motion, a11y, AI quality) | read-only |
-| **Scouts** | repro (always, powers `triage`), bug hunter, R&D/PM desk, app explorer, researcher and architect | read-only |
+| **CEO** | The `/<project>-ceo` skill: chief of staff. Assesses, decides, writes briefs, verifies, ships. | coordinates |
+| **Builders** | One editor per code area, named after your seams: frontend, backend, mobile, core, data, AI, prompt engineer | write code |
+| **Checkers** | **Security engineer** (always), release manager (always), reviewers one per lens, silent-failure hunter, critics for design, motion, accessibility or AI quality | read-only |
+| **Scouts** | Repro (always, powers `triage`), bug hunter, R&D and PM desk, app explorer, researcher and architect | read-only |
 
-A small repo gets about 4 agents, a standard one 8 to 10, a large one more. Read-only agents have
-no edit tools, and `/org-doctor` enforces it.
+A small repo gets about 4 agents, a standard one 8 to 10. Read-only agents have no edit tools, and
+`/org-doctor` fails if one does.
 
 ## How a run works
 
@@ -76,67 +95,69 @@ no edit tools, and `/org-doctor` enforces it.
 2. **Assess**: report-only specialists in parallel.
 3. **Decide**: re-verify each finding at `file:line`, rank, cap a light run at 1 to 3 fixes.
 4. **Build**: the owning editor, a playbook for the kind of change, a proving test, a branch.
-5. **Review ∥ QA**: adversarial reviewers (one per lens) and the release gate together, on a
-   frozen tree. The CEO's own design decisions are put up for attack.
-6. **Records and PR**: memory, scorecard, a micro-retro, then the PR.
-
-Each run leaves memory behind, so the next one starts smarter.
+5. **Review and gate**: adversarial reviewers (one per lens) and the release gate run together on
+   a frozen tree. The CEO's own design decisions are put up for attack.
+6. **Records, then PR**: memory, scorecard and a one-line retro, then the PR.
 
 ## The trust curve
 
 | Level | Unlocks | Who merges |
 |---|---|---|
-| L0 Observe | audits, discovery, R&D proposals (records-only PRs) | you |
-| L1 Verify | fix PRs, one at a time | you, before merge |
-| L2 Constrain | + scheduled headless runs | you, before merge |
-| L3 Parallelize | + parallel worktrees | agents merge green PRs; you sample after |
-| L4 Cloud | + always-on cloud routines | as L3 |
+| L0 Observe | Audits, discovery, R&D proposals (records-only PRs) | you |
+| L1 Verify | Fix PRs, one at a time | you, before merge |
+| L2 Constrain | Adds scheduled headless runs | you, before merge |
+| L3 Parallelize | Adds parallel worktrees | agents merge green PRs that touch no protected path; you sample after |
+| L4 Cloud | Adds always-on cloud routines | as L3 |
 
 An org starts at L0 or L1, depending on whether its tests can prove a change correct. The CEO
 proposes a promotion when the scorecard meets the criteria in
-[`autonomy.md`](skills/org-init/references/autonomy.md); **only you raise the level**. A revert
-or escaped defect demotes it automatically.
+[`autonomy.md`](skills/org-init/references/autonomy.md). Only you raise the level. A revert or an
+escaped defect demotes it automatically.
 
 ## Safety
 
-- **Guard hook** (`.claude/hooks/org_guard.py`). Always blocked: `gh pr merge --admin`,
-  non-lease force pushes, `--no-verify`. Blocked only during an org run: merging below L3,
+- **Guard hook** (`.claude/hooks/org_guard.py`). Always blocked: `gh pr merge --admin`, force
+  pushes without a lease, `--no-verify`. Blocked only during an org run: merging below L3,
   pushing to the base branch, `git stash`. Your own sessions are never restricted by the org's
   level.
 - **Gate configs are protected**: agents can't edit the files that define the checks.
 - **Untrusted input is data**: issues, PR comments and web pages pass a screen the CEO applies
   itself before anything acts on them.
-- **Hard stops**: kill switch, dirty tree, and a never-list (no production deploys or
-  migrations, no outward-facing acts in your name, no new dependency without flagging it).
+- **Hard stops**: kill switch, dirty tree, and a never-list (no production deploys or migrations,
+  no outward-facing acts in your name, no new dependency without flagging it).
 
 ## Evals
 
-`/org-eval` tests the agents like code. It runs an agent on known-answer cases in a throwaway
-worktree and has a different model judge the result. The best cases come from your own history:
+`/org-eval` tests the agents like code. It runs an agent on a known-answer case in a throwaway
+worktree, and a different model scores the result. The best cases come from your own history:
 check out the commit before a real fix and see whether the agent finds the bug. `--blind` runs
-without the org's lessons, to measure the agent itself.
+without the org's lessons, to measure the agent on its own.
+
+First result, on one case so far: on photobari, the generated reviewer scored 10/10 on a gesture
+bug a human had found by hand, and found three more defects the later fix addressed. Without the
+org's lessons, the same reviewer scored 5/10. One case is a data point, not a benchmark; more
+cases are in progress.
 
 ## Feedback (opt-in)
 
-At each micro-retro the CEO sorts friction into **local** (fixed in the project) and
-**template** (would happen in any org). Template findings go to a local outbox,
-`.claude/ceo/upstream.md`, which never leaves your machine on its own. With
-`"feedback": {"enabled": true}` in `org.json`, `/org-feedback` turns them into drafts: an issue,
-or a tested PR if you maintain agent-org. Project details are stripped, and nothing is posted
-without your yes.
+At each run's retro the CEO sorts friction into **local** (fixed in the project) and **template**
+(would happen in any org). Template findings go to a local file, `.claude/ceo/upstream.md`, which
+never leaves your machine on its own. With `"feedback": {"enabled": true}` in `org.json`,
+`/org-feedback` drafts an issue (or a tested PR, if you maintain agent-org) with project details
+stripped. Nothing is posted without your yes.
 
 ## Commands
 
 | Command | Does |
 |---|---|
-| `/org-init` | generate an org for the current repo |
-| `/org-init adopt` | add the structure to an existing hand-built org, keeping its content |
-| `/org-init upgrade` | re-sync a generated org with newer templates, keeping local edits |
-| `/org-doctor` | static health check of the org |
-| `/org-eval [agent] [--blind]` | grade agents on known-answer cases; `mine` drafts cases from history |
-| `/org-feedback` | opt-in: send template findings back to agent-org |
-| `/<project>-ceo` | the generated CEO: `audit`, `deep`, `<ID>`, `triage "<bug>"`, `request "<ask>"`, plus `discover`, `rnd`, `issues`, `e2e` where chosen |
-| `/<project>-verify` | run, drive and inspect the real software |
+| `/org-init` | Generate an org for the current repo |
+| `/org-init adopt` | Add the structure to an existing hand-built org, keeping its content |
+| `/org-init upgrade` | Re-sync a generated org with newer templates, keeping local edits |
+| `/org-doctor` | Static health check of the org |
+| `/org-eval [agent] [--blind]` | Grade agents on known-answer cases; `mine` drafts cases from history |
+| `/org-feedback` | Opt-in: send template findings back to agent-org |
+| `/<project>-ceo` | The CEO: `audit`, `deep`, `<ID>`, `triage "<bug>"`, `request "<ask>"`, plus `discover`, `rnd`, `issues`, `e2e` where chosen |
+| `/<project>-verify` | Run, drive and inspect the real software |
 
 ## What gets generated
 
@@ -163,13 +184,20 @@ CLAUDE.md                         + a 4-line pointer (skipped if CLAUDE.md ships
 
 ## Validated on real projects
 
+agent-org is distilled from four production agent orgs: a 19k-entry web directory, an AI travel
+app, a photo-sharing app and a chart library. Its 46 rules each carry their reason; many trace to
+a specific incident in those orgs.
+
 - **Generated from scratch** for an open-source job-search pipeline (Node scripts, a Go TUI,
   prompt-file "modes"). A fresh agent built the org from the skill alone and reported 23 defects
   in the skill; all were fixed.
-- **Adopted** into photobari, a hand-built org with 33 CEO PRs of history. The adoption found the
-  guard would have broken the maintainer's own workflow, and fixed it. The new reviewer then
-  scored **10/10** on a real bug a human had to find by hand, plus three more defects the later
-  fix addressed. The same agent without the org's lessons scored 5/10.
+- **Adopted** into photobari, a hand-built org with 33 CEO PRs and 0 reverts. The adoption found
+  the guard would have broken the maintainer's own workflow, and fixed it before shipping.
+
+## Install without the plugin system
+
+Clone the repository and run `./install.sh`. It copies the four skills (`org-init`, `org-doctor`,
+`org-eval`, `org-feedback`) into `~/.claude/skills`.
 
 ## Development
 
@@ -178,9 +206,38 @@ python3 -m unittest discover tests
 claude plugin validate .
 ```
 
-The guard and doctor are stdlib-only Python, so they run in any project, whatever its language.
-The website lives in `docs/` (static HTML and CSS, served by GitHub Pages).
+The guard and doctor are standard-library Python, so they run in any project, whatever its
+language. The website lives in `docs/` (static HTML and CSS on GitHub Pages).
+
+## Credits
+
+agent-org stands on other people's work.
+
+- **Four production agent orgs** built by the author (a web directory, an AI travel app, a
+  photo-sharing app, a chart library): the CEO pattern, the run cycle, and most of the
+  incident-backed rules.
+- **Lauren Tan ([@poteto](https://github.com/poteto))**: the trust-curve approach to agent
+  autonomy from her talks on running large agent teams (verification before autonomy, evals as
+  unit tests for skills, enforcing rules at the strongest layer, a feature map for UI navigation,
+  and the cloud bug-triage and runtime-inspection patterns behind `triage` and
+  `/<project>-verify`), and [noodle](https://github.com/poteto/noodle) (the architect, skeptic and
+  minimalist review lenses, "encode lessons in structure before notes", and the layout of this
+  project's docs site).
+- **[gstack](https://github.com/garrytan/gstack)** by Garry Tan: prior art for role-based Claude
+  Code setups with a CEO and an engineering team.
+- **[taste-skill](https://github.com/Leonxlnx/taste-skill)** (MIT) guided the website's design;
+  **[ponytail](https://github.com/DietrichGebert/ponytail)** (MIT) is the simplicity bar the generated
+  editors load.
+- **[Geist](https://github.com/vercel/geist-font)** fonts (OFL-1.1) via Fontsource, and
+  **[shields.io](https://shields.io)** badges.
+- Built with and for **[Claude Code](https://www.anthropic.com/claude-code)**.
+
+## Contributing
+
+Bug reports, template findings and fixes are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+If this is useful, a ⭐ helps others find it.
