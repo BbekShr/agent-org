@@ -19,7 +19,10 @@ shortcuts.
 
 - **L0** if the verification bar is weak: no automated tests, or no typecheck/lint for a typed
   language, or the app can't be run locally. The org's first backlog items build the bar.
-- **L1** otherwise. Never start higher, even if the user asks for it: trust is earned on *this*
+- **L1** for a PARTIAL or STRONG bar. With a PARTIAL bar (a harness exists, but core write
+  paths have no behavioural tests), the editors' proving-test duty means the first fix PRs
+  build the missing test layer, and the seed backlog ranks that layer first.
+- **Never start higher**, even if the user asks for it: trust is earned on *this*
   codebase with *these* agents. Record the user's target level in `org.json` → `"autonomy_target"`
   so promotions have a destination.
 

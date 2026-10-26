@@ -46,7 +46,7 @@ class DoctorTest(unittest.TestCase):
         write(self.root, ".claude/agents/demo-release-manager.md", agent("demo-release-manager", "Bash, Read, Grep"))
         write(self.root, ".claude/skills/demo-ceo/SKILL.md",
               "---\nname: demo-ceo\ndescription: CEO\n---\nDispatch `demo-frontend-engineer` and `demo-release-manager`.\n")
-        for f in ("backlog.md", "memory/codebase.md", "memory/retros.md", "memory/scorecard.md", "AUTONOMY.md", "PRINCIPLES.md"):
+        for f in ("RULES.md", "backlog.md", "memory/codebase.md", "memory/retros.md", "memory/scorecard.md", "AUTONOMY.md", "PRINCIPLES.md"):
             write(self.root, f".claude/ceo/{f}", "# x\n")
         write(self.root, ".claude/ceo/learnings/_shared.md", "## Active\n- one\n\n## Archive\n")
         write(self.root, ".claude/ceo/evals/cases/c1.md", "---\nid: demo-1\nagent: demo-frontend-engineer\n---\n")
@@ -116,6 +116,34 @@ class DoctorTest(unittest.TestCase):
     def test_guard_not_wired(self):
         write(self.root, ".claude/settings.json", "{}")
         self.assertError("not registered")
+
+    def test_perimeter_covering_org_files(self):
+        self.org["agents"][0]["perimeter"] = [".claude/**"]
+        self.save()
+        self.assertError("covers org files")
+
+    def test_perimeter_except_excludes_org_files(self):
+        self.org["agents"][0]["perimeter"] = [".claude/**"]
+        self.org["agents"][0]["except"] = [".claude/agents/**", ".claude/ceo/**", ".claude/skills/demo-ceo/**",
+                                           ".claude/hooks/**"]
+        self.save()
+        code, out = self.doctor()
+        self.assertFalse(any("covers org files" in e for e in out["errors"]), out)
+
+    def test_user_data_and_ignored_refs_do_not_warn(self):
+        write(self.root, ".gitignore", "output/\n")
+        self.org["user_data_paths"] = ["config/profile.yml", "data/*"]
+        self.save()
+        write(self.root, ".claude/agents/demo-frontend-engineer.md", agent(
+            "demo-frontend-engineer", body="Never touch `config/profile.yml`, `data/apps.md` or `output/cv.pdf`; see `src/gone.ts`."))
+        code, out = self.doctor()
+        refs = [w for w in out["warnings"] if "does not exist" in w]
+        self.assertEqual(len(refs), 1, refs)
+        self.assertIn("src/gone.ts", refs[0])
+
+    def test_fill_comment_left_in(self):
+        write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="<!-- FILL: conventions -->"))
+        self.assertError("FILL")
 
     def test_editor_without_eval_warns(self):
         os.remove(os.path.join(self.root, ".claude", "ceo", "evals", "cases", "c1.md"))

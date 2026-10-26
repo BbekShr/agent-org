@@ -12,6 +12,7 @@ cut the surrounding line.
 | `DATE` | today, YYYY-MM-DD |
 | `AGENT_ORG_VERSION` | the `version` in this plugin's `.claude-plugin/plugin.json` |
 | `ORG_SIZE` | small / standard / full |
+| `PROJECT_KIND` | web-app / mobile-app / desktop-app / service / library / cli / prompt-product (comma-separate if several) |
 | `AGENT_COUNT` | number of generated agents |
 | `BASE_BRANCH` | usually `main` |
 | `BRANCH_PREFIX` | `org/` unless the project already uses a prefix for bot branches (`ceo/`, `improve/`) |
@@ -28,8 +29,7 @@ cut the surrounding line.
 | `GATES_TABLE` | markdown table `\| # \| Gate \| Command \| When \|`: real commands only, in fail-fast order (static → unit → build → e2e), plus a final "Feature check: supplied by the CEO's brief" row |
 | `GATES_INLINE` | the same, inline: "`npx tsc --noEmit` ∧ `npm run lint` ∧ `npm test`" |
 | `CHEAP_GATES` | the static gates that are safe to run in parallel worktrees (no ports, no shared caches) |
-| `BUILD_SURFACE` | the paths whose change requires the build gate |
-| `HEADLESS_GATE_TOOLS` | `Bash(<cmd>:*)` entries for each gate command, comma-separated |
+| `HEADLESS_GATE_TOOLS` | `Bash(<cmd>:*)` entries for each gate command, comma-separated; split compound commands (`cd dashboard && go vet ./...` → `Bash(cd dashboard:*),Bash(go vet:*)`), and include the install command |
 
 ## Team and routing
 | Placeholder | Fill with |
@@ -39,7 +39,7 @@ cut the surrounding line.
 | `DEFAULT_OWNER` | the editor closest to "everything else" (often backend, or the core engineer for a library) |
 | `DEPENDENCY_ORDER_HINT` | e.g. "backend first, then the UI that calls it" |
 | `QUALITY_BARS` | optional `## Quality bars` section naming installed skills the org leans on and who loads them (e.g. "`taste-skill` is the design bar: the design critic grades against it. `ponytail` is the code bar: every editor loads it before writing; you run `/ponytail-review` on the full diff before the final gate"). Empty string if none installed |
-| `ASSESS_ROSTER` | which agents run in each mode's assess step. Defaults: **audit/light** = security-engineer + release-manager (+ silent-failure-hunter when the run touches write paths); **deep** = every report-only specialist + each editor in read-only "review your perimeter" mode + critics |
+| `ASSESS_ROSTER` | which agents run in each mode's assess step. Defaults: **audit/light** = security-engineer + release-manager (+ silent-failure-hunter when the run touches write paths); **deep** = every report-only specialist + critics + `<slug>-reviewer` pointed at each editor's perimeter (correctness lens). Never dispatch editors to assess: they have write tools, and "read-only mode" in a brief is not enforcement |
 | `REVIEW_ROSTER` | small: "one `<slug>-reviewer` on the correctness lens (or the built-in code-review if no reviewer agent)"; standard/full: "`<slug>-reviewer` once per lens: correctness, security, regression, silent-failure (+ performance when hot paths changed)" |
 | `HARD_ITEM_PIPELINE` | small/standard: "dispatch the built-in `Plan` agent at `MODEL_TOP` (read-only) for a plan, check each acceptance criterion maps to a step and a verification, then hand the plan verbatim to the owning editor at `MODEL_MID`." full: "`<slug>-researcher` (fan out one per area for large items) → `<slug>-architect` → check the plan against the acceptance criteria → owning editor with the plan verbatim." |
 | `OBJECTIVE_FUNCTION` | the numbered list from roster.md with this project's nouns: name the core journeys at rank 4, the real perf budget at rank 7 |
@@ -49,7 +49,7 @@ cut the surrounding line.
 | Placeholder | Fill with |
 |---|---|
 | `MODE_LIST_EXTRA` | ", /<slug>-ceo discover, ..." for each optional mode chosen |
-| `MODE_ROWS_EXTRA` | one modes-table row per optional mode, with its minimum autonomy level (discover/rnd/issues: L0, records-only; `discover fix`: L3; e2e: L1) |
+| `MODE_ROWS_EXTRA` | one modes-table row per optional mode, four columns `\| mode \| does \| edits? \| min level \|` (discover/rnd/issues: L0, records-only; `discover fix`: L3; e2e: L1) |
 | `MODE_README_ROWS` | the same rows for `.claude/ceo/README.md` |
 | `EXTRA_MODES` | the chosen `templates/ceo/modes/*.md`, concatenated |
 | `SCHEDULE_NOTES` | at ≥L2 target: how to run `.claude/ceo/schedule/run-headless.sh` from launchd/cron or a Claude Code routine; otherwise "Scheduling unlocks at L2 (see AUTONOMY.md)" |
@@ -61,6 +61,8 @@ cut the surrounding line.
 | `PERIMETER_SUMMARY` / `PERIMETER_GLOBS_SHORT` / `PERIMETER_TABLE` | from the ownership map; the table lists globs and what lives there |
 | `NEIGHBOR_PERIMETERS` | the other editors and what they own, one line |
 | `PROTECTED_PATHS_SHORT` / `PROTECTED_PATHS_LIST` | from the risk surface; always CLAUDE.md/AGENTS.md, CI workflows, `.env*`, the auth layer, migrations, gate configs, test assertions where tests are the bar |
+| `USER_DATA_PATHS` | end-user data paths from discovery (also `org.json` → `user_data_paths`); "none" if the project holds no end-user data |
+| `BOOTSTRAP_FRICTION` | anything in this bootstrap that was hard or ambiguous; "none" if it was smooth |
 | `PROTECTED_RULE` | below L3: "the human merges it"; at L3+: "it never self-merges, even when green" |
 | `CONVENTIONS` | 3-8 bullets from discovery report 4 |
 | `CRITICAL_RULES` | the project's must-never-break rules, each with its reason (e.g. "the rate limiter fails OPEN by design; don't 'fix' it without a human decision") |
@@ -71,6 +73,18 @@ cut the surrounding line.
 | `CRITIC_*` | domain (design/motion/a11y/AI quality), subject, bar (skills to load + comparison set), failure mode ("looks like a library default"), method (how to observe it for real), extra tools (", Skill" when it loads a skill) |
 | `EXPLORER_SURFACE` / `EXPLORER_HOWTO` / `CORE_JOURNEYS` / `RUN_HOWTO` | the driver (browser pane / Playwright / iOS simulator), dev command and pinned port, seed account source, viewports, journeys |
 | `FEATURE_ROWS` | initial rows from routes/screens found in discovery; the explorer fills in selectors over time |
+
+## Verify skill and repro agent
+| Placeholder | Fill with |
+|---|---|
+| `VERIFY_DRIVERS_SHORT` | e.g. "browser pane + Playwright", "iOS simulator", "CLI invocations", "test suite + examples" |
+| `VERIFY_SETUP` | exact install/seed steps in a fresh worktree (and how to link deps from the main tree when that's safe) |
+| `VERIFY_START` | the start command, the pinned port, and how to confirm the process is this checkout |
+| `VERIFY_DRIVE` | how to exercise each core journey: browser steps with selectors, simulator taps, CLI commands with fixture inputs, API calls |
+| `VERIFY_INSPECT` | the runtime-inspection tools available and the exact commands: console/network logs, CPU traces (`--cpu-prof`, DevTools Performance), heap snapshots, profilers (pprof, Instruments), log files. Name what's NOT available |
+| `VERIFY_EVIDENCE` | what to attach per claim type: output tail, screenshots per viewport, trace file paths, before/after numbers |
+| `VERIFY_TEARDOWN` | stop servers, free ports, remove the worktree |
+| `REPRO_EXTRA_TOOLS` | extra tools the repro agent needs to drive the app (e.g. ", mcp__playwright__*" or the browser pane tools); empty if Bash is enough |
 
 ## State seeds
 | Placeholder | Fill with |

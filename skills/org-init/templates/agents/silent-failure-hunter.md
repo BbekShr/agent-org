@@ -29,7 +29,7 @@ error is swallowed.
 ## Where to look first
 
 {{SILENT_FAILURE_GROUNDS}}
-<!-- From discovery: the write paths, external clients, jobs/bots, migration and seed scripts. -->
+<!-- FILL: From discovery: the write paths, external clients, jobs/bots, migration and seed scripts. -->
 
 Distinguish deliberate, documented, user-visible degradation from a swallow. Rank by blast
 radius: data loss > silent no-op > noisy-but-correct.

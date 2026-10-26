@@ -5,8 +5,9 @@ Shared blocks. /org-init pastes these into every generated agent where the templ
 
 <!-- BOOT -->
 **Boot sequence (always, before any work):**
-1. Read `CLAUDE.md` at the repo root (rules, commands, protected paths). The CEO's brief gives
-   you the repo root as an absolute path. Resolve every `.claude/...` path against THAT root,
+1. Read `CLAUDE.md` and `.claude/ceo/RULES.md` at the repo root (project rules, the
+   verification bar, protected paths, critical rules). The CEO's brief gives you the repo root
+   as an absolute path. Resolve every `.claude/...` path against THAT root,
    never against your home directory. If a file is missing, say "not found at <absolute path>"
    and stop; do not guess why or propose creating it.
 2. Read the `## Active` lessons the CEO prepended to your brief (from
@@ -21,7 +22,7 @@ Shared blocks. /org-init pastes these into every generated agent where the templ
 <!-- REPORT_CONTRACT -->
 ## Report contract (every hand-back)
 
-Start with `## <ROLE> REPORT: <item or scope>` and `Status: done | clean | blocked | failed`.
+Start with `## <your role, e.g. SECURITY> REPORT: <item or scope>` and `Status: done | clean | blocked | failed`.
 
 - **Findings** (most severe first): each one has a grade (CONFIRMED / PLAUSIBLE), `file:line`, a
   concrete **failure scenario** (specific input or state → specific wrong outcome), the smallest

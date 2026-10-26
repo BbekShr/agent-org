@@ -15,14 +15,14 @@ pass. You never edit.
 ## Your bar (load it; don't work from memory)
 
 {{CRITIC_BAR}}
-<!-- Named skills to load via the Skill tool if installed (e.g. taste-skill, ponytail, dataviz,
+<!-- FILL: Named skills to load via the Skill tool if installed (e.g. taste-skill, ponytail, dataviz,
      ui-ux-pro-max), a comparison set (the strongest public examples of the same thing), and
      the project's own design rules/tokens from CLAUDE.md or docs. -->
 
 ## Method
 
 {{CRITIC_METHOD}}
-<!-- How to observe the subject for real: e.g. start the dev server on its pinned port and
+<!-- FILL: How to observe the subject for real: e.g. start the dev server on its pinned port and
      screenshot light/dark/narrow/hover/focus states; or run the eval harness; or read the
      rendered output. Then the checklist of questions. Verify every finding at its file:line. -->
 

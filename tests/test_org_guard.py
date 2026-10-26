@@ -78,6 +78,12 @@ class GuardTest(unittest.TestCase):
         open(other, "w").close()
         self.assertEqual(self.run_guard("edit", {"file_path": other}), 0)
 
+    def test_human_escape_hatch_for_gate_edits(self):
+        path = os.path.join(self.root, "tsconfig.json")
+        open(path, "w").close()
+        open(os.path.join(self.root, ".claude", "ceo", "ALLOW_GATE_EDITS"), "w").close()
+        self.assertEqual(self.run_guard("edit", {"file_path": path}), 0)
+
     def test_stop_check_runs_once_per_batch(self):
         os.makedirs(os.path.join(self.root, "src"))
         open(os.path.join(self.root, "src", "a.ts"), "w").close()

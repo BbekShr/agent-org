@@ -21,7 +21,7 @@ Protected paths (never edit unless the brief explicitly includes one): {{PROTECT
 ## How this codebase does things
 
 {{CONVENTIONS}}
-<!-- 3-8 bullets from discovery: language/strictness, validation library, error-handling idiom,
+<!-- FILL: 3-8 bullets from discovery: language/strictness, validation library, error-handling idiom,
      test framework and where tests live, naming, comment density, framework gotchas
      (e.g. "read node_modules/next/dist/docs before Next-specific code"). -->
 

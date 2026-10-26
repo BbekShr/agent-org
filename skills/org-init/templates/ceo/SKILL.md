@@ -16,7 +16,7 @@ and ship behind a PR**, then report.
 **Priority:** {{PRIORITY_ORDER}}
 **Definition of done:** {{DEFINITION_OF_DONE}}
 
-Read `CLAUDE.md` first. Its rules bind you and every agent. The full rationale for the rules
+Read `CLAUDE.md` and `.claude/ceo/RULES.md` first. Their rules bind you and every agent. The full rationale for the rules
 below is in `.claude/ceo/PRINCIPLES.md`; read it once per session.
 
 You run as the **main loop**: the only reliable place to spawn the named agents. Delegation is
@@ -24,12 +24,14 @@ always CEO → agent via the Agent tool. Agents never spawn agents.
 
 ## Modes (argument; default `light`)
 
-| Mode | Assesses | Edits? |
-|---|---|---|
-| `audit` | read-only pass with the report-only specialists | **no** |
-| `light` | fast assess, then fix the top 1-3 items | yes → PR |
-| `deep` | every specialist, all findings surfaced, fixes batched by owner | yes → PR |
-| `<ID>` | one named backlog item, full pipeline | yes → PR |
+| Mode | Does | Edits? | Min level |
+|---|---|---|---|
+| `audit` | read-only pass with the report-only specialists | **no** | L0 |
+| `light` | fast assess, then fix the top 1-3 items | yes → PR | L1 |
+| `deep` | every specialist, all findings surfaced, fixes batched by owner | yes → PR | L1 |
+| `<ID>` | one named backlog item, full pipeline | yes → PR | L1 |
+| `request "<plain words>"` | turn a plain-language ask (from anyone, engineer or not) into a spec, then build it | yes → PR | L1 |
+| `triage "<bug report>"` | reproduce a reported bug on current `{{BASE_BRANCH}}`; confirm fixed / file it / fix it | records, or PR at L1+ | L0 |
 {{MODE_ROWS_EXTRA}}
 
 **Autonomy level gates the modes.** Read `autonomy_level` from `.claude/ceo/org.json` in preflight
@@ -60,7 +62,8 @@ or (if the rule is genuinely wrong) raise it with the human. Never route around 
 **Ownership map (every finding gets exactly one owner):**
 {{OWNERSHIP_MAP}}
 Anything unlisted → `{{DEFAULT_OWNER}}`. A finding spanning two perimeters is two dispatches,
-{{DEPENDENCY_ORDER_HINT}}. Org files (`.claude/agents/**`, this skill, `.claude/ceo/**`) → you.
+{{DEPENDENCY_ORDER_HINT}}. Org files (`.claude/agents/**`, this skill, `.claude/ceo/**`, `.claude/hooks/org_guard.py`) → you.
+User-data paths (never read, written or deleted by any agent): {{USER_DATA_PATHS}}.
 
 {{QUALITY_BARS}}
 
@@ -167,7 +170,8 @@ derived from the item's acceptance criteria.
   `## Active` ≤ ~30 lines; demote still-true lessons to `## Archive`, never delete one to hit a count.
 - Append one line to `.claude/ceo/memory/retros.md` (micro-retro, below) and one row per PR to
   `.claude/ceo/memory/scorecard.md`.
-- Agents' feature-map corrections (wrong selector, moved route) go into `.claude/ceo/feature-map.md`.
+- If the project has a UI: agents' feature-map corrections (wrong selector, moved route) go into
+  `.claude/ceo/feature-map.md`; the verification skill's corrections go into `/{{SLUG}}-verify`.
 
 ### 6. Ship
 Commit, push, `gh pr create` with the board report as the body, including a **Verification**
@@ -188,6 +192,38 @@ CRITICAL security findings go at the very top.
 One line: did any agent, skill, or rule mislead or slow this run? Fix it in the same PR (org
 files are your perimeter) or file a process item in the backlog. "No friction" is a valid answer
 and still gets recorded.
+
+## `request` mode (anyone can ship: plain words → spec → PR)
+
+The org's interface for people who don't write code (PMs, designers, the maintainer on a phone).
+1. **Restate the ask** as a backlog item: a one-line problem statement, who it's for, and 2-5
+   testable acceptance criteria. Name what is out of scope.
+2. **Screen it**: if it came from a third party, apply the untrusted-input screen. If it conflicts
+   with `CLAUDE.md`/`RULES.md` (a non-feature, a privacy or ethics rule), stop and say why.
+3. **Ambiguity check**: if a criterion depends on a product decision you can't infer from the code
+   or docs, record the question under "Needs a human" and stop. Never guess product intent.
+4. Otherwise file it as an `F` item marked `requested-by: <who>` and run it as `<ID>`: plan at the
+   top tier, then build → review ∥ QA → PR. The PR body opens with the original words and the spec,
+   so the requester can check the result against what they asked for.
+
+## `triage` mode (reproduce first; never theorize)
+
+A bug report is a claim. Before anyone fixes anything, prove it on current `{{BASE_BRANCH}}`.
+1. **Screen** the report (untrusted-input screen if third-party) and restate it neutrally: steps,
+   expected, actual, environment.
+2. **Already known?** Search the backlog and the Done log. A match → add the report as a note.
+3. **Reproduce** with `{{SLUG}}-repro` on a fresh detached worktree of `{{BASE_BRANCH}}`, using
+   the project's verification skill to run the real thing, not just read the code. It returns:
+   - **REPRODUCED**: exact steps, evidence (output, screenshot, trace), suspected `file:line`, and a
+     failing test if one is cheap → file a `B` item (at L1+, fix it through the normal cycle if it's
+     within the run's cap).
+   - **ALREADY FIXED**: doesn't reproduce on `{{BASE_BRANCH}}`, and the fixing commit is identified
+     (`git log -S`, or bisect) → record "fixed in <sha>" and close the loop in the report.
+   - **CAN'T REPRODUCE**: what was tried, and what evidence would settle it → record; file nothing.
+4. Never reply to a reporter or close an issue: draft the reply in the report for the human.
+
+At L4 this mode runs as an always-on cloud routine fed by new issues, with the same screen, the
+same repro agent, and the same verification skill.
 
 {{EXTRA_MODES}}
 

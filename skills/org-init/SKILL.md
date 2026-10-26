@@ -1,6 +1,6 @@
 ---
 name: org-init
-description: Bootstrap a CEO-led agent org for the current project. Scans the codebase, interviews the user briefly, then generates tailored specialist agents (.claude/agents/), a /<project>-ceo orchestrator skill, org memory (.claude/ceo/), guard hooks, and seed evals, sized to the project and starting at the autonomy level its verification bar can support. Invoke as /org-init (new org), /org-init adopt (normalize an existing hand-built CEO/agents setup without losing its content), or /org-init upgrade (re-sync a generated org with the latest templates, preserving local edits). Use when the user wants "a CEO and agents for this repo", "an agent team", "orchestration like my other project", or to set up autonomous maintenance.
+description: Bootstrap a CEO-led agent org for the current project. Scans the codebase, interviews the user briefly, then generates tailored specialist agents (.claude/agents/), a /<project>-ceo orchestrator skill, a /<project>-verify skill that runs and inspects the real software, org memory and rules (.claude/ceo/), guard hooks, and seed evals, sized to the project and starting at the autonomy level its verification bar can support. Invoke as /org-init (new org), /org-init adopt (normalize an existing hand-built CEO/agents setup without losing its content), or /org-init upgrade (re-sync a generated org with the latest templates, preserving local edits). Use when the user wants "a CEO and agents for this repo", "an agent team", "orchestration like my other project", or to set up autonomous maintenance.
 ---
 
 # org-init: generate an agent org for this project
@@ -47,6 +47,12 @@ dumps. Each returns the section named.
    build; which of those currently exist; CI workflows and what they actually enforce on a PR;
    the files that configure each gate (tsconfig, lint config, test config, size budgets).
    Size: rough LOC and contributor count (`git shortlog -sn | head`).
+   **Project kind:** web app / mobile app / desktop app / service-API / library / CLI-TUI /
+   prompt-product (logic lives in prompt files an agent follows), possibly several.
+   **Runtime eyes and hands:** how an agent could run and inspect it for real: dev server and
+   port, seed/test accounts in fixture files, e2e harness, browser driving (Playwright, the
+   built-in browser pane), simulator/emulator tooling, profilers and trace tooling (Chrome DevTools
+   protocol, `--cpu-prof`, Instruments, pprof), log locations. Say what's missing.
 2. **Architecture & perimeters**: the top-level layout, the natural seams (client/server,
    app/library, jobs/bots, AI boundary, infra), proposed perimeters as globs with a one-line
    rationale each, the core user journeys (3-5, named as flows), and whether features are
@@ -56,10 +62,15 @@ dumps. Each returns the section named.
    write paths and migrations, deploy trigger (does merging deploy?), anything that costs money
    per call, documented design decisions that look like bugs (fail-open limiters, deliberate
    cache gaps), and the files that should be protected paths.
+   **Shipped artifacts:** does any mechanism copy repo files to end users (a self-updater's
+   file list, npm `files`/published package, a Docker image, a release bundle)? Does it include
+   `CLAUDE.md` or anything under `.claude/`? Name the mechanism and its file list. User-data
+   paths: files that hold end-user data (never to be read or written by agents).
 4. **Conventions & history**: existing rules in CLAUDE.md/AGENTS.md/CONTRIBUTING, error-handling
    and validation idioms, test locations and style, comment density; from `git log`: the last
    ~30 commits whose message says fix/bug/regression, as `sha | subject | files` (this seeds evals),
-   recurring defect classes, and any reverts.
+   recurring defect classes (a class = the same kind of mistake fixed ≥2 times), and any reverts.
+   Collocation: is each feature in one place, or smeared across layers joined only by naming?
 
 While they run, do nothing else in the tree.
 
@@ -75,6 +86,16 @@ While they run, do nothing else in the tree.
    review-only / nothing. Rules at review-only or nothing become seed `P` backlog items: "enforce
    <rule> at <stronger layer>", with acceptance criteria. Missing gates (no typecheck in CI, no
    test runner) become seed items too, ranked first.
+4. **Bans:** for each recurring defect class from report 4, propose the mechanical ban that would
+   have prevented it (a lint rule, a harness check, a type, a structural rule), as a `P` item.
+   Architecture and CI beat prompting: a class that has recurred is evidence prose didn't work.
+5. **Agent-friendliness:** if features are smeared across layers, or contracts are duplicated in
+   several files that must be edited together, note it. If it is severe, file one `P` "big-rock"
+   item proposing the restructure (collocated features, single source of truth), and don't start it.
+6. **Shipped artifacts:** if `CLAUDE.md` or `.claude/` ships to end users, the org must not leak
+   into their installs. Then: don't add even the pointer to `CLAUDE.md`, and file a "Needs a human"
+   item to exclude `.claude/agents/`, `.claude/ceo/`, `.claude/hooks/org_guard.py`, and the
+   generated skills from the shipping mechanism's file list (it's usually a protected path).
 
 ## Phase 3: Interview (ONE AskUserQuestion call, ≤4 questions, recommended option first)
 
@@ -99,7 +120,12 @@ Using `roster.md`, produce and present (as one compact message, not a file dump)
 - protected paths and gate files;
 - the objective function with this project's journeys named;
 - starting autonomy level, target, and why;
-- seed backlog items (from the constraint audit and the bar check), max ~8.
+- seed backlog items (from the constraint audit, bans, and the bar check), max ~8;
+- project kind, user-data paths, shipped-artifact handling (Phase 2.6);
+- quality bars: installed skills the org will lean on (from Phase 0) and which agent loads each;
+- the verify skill outline: setup, start, drive, inspect, evidence, teardown (from Phase 1's
+  runtime report). If the project can't be run or inspected at all, the first seed item builds
+  that, and the verify skill says plainly what's missing.
 
 Model tiers: top = `opus` (or the newest top model available), mid = `sonnet`, small = `haiku`,
 unless the user named others. Ask for a yes or edits. Apply edits and proceed. Don't re-ask.
@@ -107,14 +133,26 @@ unless the user named others. Ask for a yes or edits. Apply edits and proceed. D
 ## Phase 5: Generate
 
 Slug = short lowercase project name (from package name or directory). Fill every template
-placeholder. **No `{{` may survive in a generated file**; `/org-doctor` fails on one.
-HTML comments in templates that describe what to fill (`<!-- From discovery: ... -->`) are
-instructions to you: replace them with the content, then delete the comment.
+placeholder. **No uppercase `{{NAME}}` placeholder may survive**; `/org-doctor` fails on one. (A
+project's own `{{lowercase}}` template syntax is fine.) Comments starting `<!-- FILL:` are
+instructions to you: replace each with content, then delete it (the doctor fails on a leftover).
+Other HTML comments (format guidance in backlog/retros) stay. An agent's filename and frontmatter
+`name` must match; its catalog role (e.g. `ai-quality-critic`) can differ from its name
+(`<slug>-eval-critic`) and is recorded as `role` in `org.json`.
+
+Tailor the report-only checklists to the project kind: a web app's security checklist (authZ,
+IDOR, CORS, rate limits) is wrong for a CLI, where the surface is local files, subprocesses,
+untrusted input reaching prompts or renderers, and the update/distribution channel. Same for
+the release manager (no ports for a library) and the never-list (no "production deploy" for a
+local tool; add the project's own: e.g. "never submit an application on the user's behalf").
 
 | Write | From |
 |---|---|
 | `.claude/agents/<slug>-<role>.md` per roster entry | `templates/agents/<role>.md`; editors from `editor.md`, critics from `critic.md`. Paste `_contract.md`'s BOOT and REPORT_CONTRACT blocks where `{{BOOT}}`/`{{REPORT_CONTRACT}}` appear |
 | `.claude/skills/<slug>-ceo/SKILL.md` | `templates/ceo/SKILL.md`, with the chosen `templates/ceo/modes/*.md` pasted at `{{EXTRA_MODES}}` |
+| `.claude/skills/<slug>-verify/SKILL.md` | `templates/verify/SKILL.md`: the org's runtime eyes and hands, filled from Phase 1's runtime report. Always generated (for a library: build, run the test suite, run the examples, profile a hot path) |
+| `.claude/agents/<slug>-repro.md` | `templates/agents/repro.md`: always generated (it powers `triage`) |
+| `.claude/ceo/RULES.md` | `templates/org/RULES.md`: the org's rules (verification bar, protected paths, user-data paths, critical rules) |
 | `.claude/ceo/org.json` | `templates/org/org.json`, filled with the real gates, gate files, protected paths, agents (name, access, role, perimeter globs), modes, and `guard.stop_check` (the cheapest meaningful check, e.g. typecheck, or `""` if none) |
 | `.claude/ceo/{README,backlog,feature-map}.md`, `memory/*`, `learnings/*` | `templates/org/` (`feature-map.md` only for UI projects) |
 | `.claude/ceo/.gitignore` | `templates/org/gitignore` |
@@ -123,19 +161,24 @@ instructions to you: replace them with the content, then delete the comment.
 | `.claude/hooks/org_guard.py` | `templates/hooks/org_guard.py` (verbatim) |
 | `.claude/ceo/bin/org_doctor.py` | copy `../org-doctor/scripts/org_doctor.py` verbatim, so preflight, headless and cloud runs never depend on where this plugin is installed |
 | `.claude/settings.json` | **merge** `templates/hooks/settings.snippet.json` into the existing file: keep every existing key and hook; never replace the file |
-| `CLAUDE.md` | **append** `templates/claude-md-section.md` as a new section (create the file if absent). Never rewrite existing content |
-| `.claude/ceo/schedule/run-headless.sh` | only if the target is ≥L2; mark executable |
+| `CLAUDE.md` | **append** `templates/org/claude-md-pointer.md` (4 lines; create the file if absent). Never rewrite existing content. **Skip entirely if `CLAUDE.md` ships to end users** (Phase 2.6) |
+| `.claude/ceo/schedule/run-headless.sh` | only if the target is ≥L2; mark executable. For compound gate commands (`cd x && cmd`), allowlist each part (`Bash(cd x:*)`, `Bash(cmd:*)`) |
 
 Fill content from discovery, never from generic filler: perimeters are real globs that match
-files (`git ls-files '<glob>' | head` proves each one), commands are the real commands, the
+files (`git ls-files '<glob>' | head` proves each one) and never cover org files (`.claude/agents`,
+`.claude/ceo`, the generated skills: use `except` in `org.json`; the doctor fails on overlap), commands are the real commands, the
 security surface names real files. Keep each agent tight: the best agents in the source orgs
 are 40-140 lines. If a section has nothing project-specific to say, cut it rather than pad it.
 
 ## Phase 6: Seed evals
 
-Create `.claude/ceo/evals/cases/` with 1-3 known-answer cases per editor and per hunting/review
-role, preferring cases mined from git history (Phase 1 report 4). Format in the `org-eval` skill;
-if that skill is unavailable, use this:
+Create `.claude/ceo/evals/cases/` with at least one known-answer case for every editor and for
+the release manager, plus one per hunting/review role where history offers one, preferring cases
+mined from git history (Phase 1 report 4). Kinds: hunters/reviewers/specialists get
+`find-the-bug`; editors get `fix-the-bug`; the release manager gets `gate`; the repro agent gets
+`triage` (a fixed bug: expected verdict ALREADY FIXED in <sha>). Every file a Task names must
+exist at the case's `base` (`git cat-file -e <base>:<path>`): a fix that created the file it
+fixed can't be audited at its parent. The format is the `org-eval` skill's; summary:
 
 ```
 ---
@@ -163,14 +206,20 @@ known to fail a gate.
 3. Smoke-test one agent: dispatch the release manager (read-only) on the base branch with a
    "run the cheap gates and report" brief. Confirm its report follows the contract and that it
    resolved `.claude/ceo/...` against the repo root.
-4. Write the baseline into `memory/codebase.md` and the bootstrap line into `memory/retros.md`.
+4. Confirm `memory/codebase.md` holds the Phase 2 baseline and `memory/retros.md` the bootstrap
+   line in the file's `<friction> → <action>` format, naming any friction from this bootstrap.
+5. Test that the cheap gates leave the tree clean (`git status --porcelain` empty after them), so
+   apply modes won't spuriously fall back to audit.
 
 ## Phase 8: Hand off
 
-Commit on the bootstrap branch (one commit for agents, one for CEO+state, one for hooks/settings/
-CLAUDE.md, so each can be reviewed alone). Ask before pushing or opening a PR: those are
+Commit on the bootstrap branch: (1) agents, (2) CEO + verify skills and everything under
+`.claude/ceo/` (state, rules, evals, bin, schedule), (3) hooks, settings, and the `CLAUDE.md`
+pointer, so each can be reviewed alone. Ask before pushing or opening a PR: those are
 outward-facing. Then tell the user, briefly: the roster, the starting level and what would earn
-the next one, the first command to run (`/<slug>-ceo audit`), and the kill switch.
+the next one, the first command to run (`/<slug>-ceo audit`), and the kill switch. Set the
+expectation honestly: the first runs are the investment phase (building tests, bans, the verify
+skill, evals) and feel slow; throughput compounds once the org has earned L2-L3.
 
 ## Adopt (existing hand-built org)
 

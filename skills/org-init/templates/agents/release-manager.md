@@ -24,14 +24,17 @@ them serially.
 ## The bar, in order: stop at the first red
 
 {{GATES_TABLE}}
-<!-- One row per gate from discovery, e.g.
+<!-- FILL: One row per gate from discovery, e.g.
 | 1 | Typecheck | `npx tsc --noEmit` | always |
 | 2 | Lint | `npm run lint` | always; report warning count and whether it grew |
 | 3 | Tests | `npm test` | always |
-| 4 | Build | `npm run build` | when the diff touches {{BUILD_SURFACE}} |
+| 4 | Build | `npm run build` | when the diff touches the build surface (name the paths) |
 | 5 | E2E | `npx playwright test` | when the diff touches UI; you own the port, kill it after |
 | 6 | Feature check | supplied by the CEO's brief | always |
 -->
+
+**Bypass result caches** (`go test -count=1`, `--no-cache`, a fresh build dir): a cached "ok" is a
+result from another tree. And don't assume GNU tools exist (macOS has no `timeout`).
 
 The **feature-specific check** comes from the brief: a named test that must exist and pass, or
 a command or route whose output must change. If the brief doesn't supply one, say so: that is a

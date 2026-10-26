@@ -11,15 +11,19 @@
   "autonomy_target": "{{AUTONOMY_TARGET}}",
   "models": { "top": "{{MODEL_TOP}}", "mid": "{{MODEL_MID}}", "small": "{{MODEL_SMALL}}" },
   "gates": [
-    { "name": "typecheck", "cmd": "npx tsc --noEmit", "when": "always", "cheap": true }
+    { "name": "typecheck", "cmd": "npx tsc --noEmit", "when": "always", "cheap": true },
+    { "name": "feature-check", "cmd": "", "when": "always", "note": "supplied by the CEO's brief per item" }
   ],
   "gate_files": ["tsconfig.json"],
   "protected_paths": ["CLAUDE.md", ".github/workflows/**", ".env*"],
+  "user_data_paths": [],
+  "shipped_paths_note": "",
   "agents": [
-    { "name": "{{SLUG}}-release-manager", "access": "report-only", "role": "release-manager", "perimeter": [] }
+    { "name": "{{SLUG}}-release-manager", "access": "report-only", "role": "release-manager", "perimeter": [], "except": [] }
   ],
   "default_owner": "{{DEFAULT_OWNER}}",
-  "modes": ["audit", "light", "deep", "id"],
+  "kind": "{{PROJECT_KIND}}",
+  "modes": ["audit", "light", "deep", "id", "request", "triage"],
   "guard": {
     "block_stash": true,
     "stop_check": { "cmd": "", "watch": ["src"], "extensions": [".ts", ".tsx"] }

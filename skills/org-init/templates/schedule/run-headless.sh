@@ -5,13 +5,17 @@ set -euo pipefail
 cd "$(dirname "$0")/../../.."          # repo root
 MODE="${1:-light}"
 [ -f .claude/ceo/PAUSE ] && { echo "CEO paused (.claude/ceo/PAUSE present)"; exit 0; }
-# Never touch a human's work in progress: a dirty tree downgrades any apply mode to audit.
-if [ -n "$(git status --porcelain)" ] && [ "$MODE" != "audit" ]; then MODE=audit; fi
-git fetch -q origin "{{BASE_BRANCH}}" && git checkout -q "{{BASE_BRANCH}}" && git pull -q --ff-only
+# Never touch a human's work in progress: a dirty tree means a read-only audit, run in place,
+# with no checkout or pull (both would move or clobber that work).
+if [ -n "$(git status --porcelain)" ]; then
+  MODE=audit
+else
+  git fetch -q origin "{{BASE_BRANCH}}" && git checkout -q "{{BASE_BRANCH}}" && git pull -q --ff-only
+fi
 mkdir -p .claude/ceo/reports
 LOG=".claude/ceo/reports/$(date +%F)-headless-$MODE.log"
 # Tool allowlist: anything outside it is auto-denied in headless mode. Widen deliberately.
 claude -p "/{{SLUG}}-ceo $MODE" \
-  --allowedTools "Read,Grep,Glob,Agent,Edit,Write,Bash(git:*),Bash(gh pr:*),Bash(gh issue list:*),{{HEADLESS_GATE_TOOLS}}" \
+  --allowedTools "Read,Grep,Glob,Agent,Edit,Write,Bash(git:*),Bash(gh pr:*),Bash(gh issue list:*),Bash(python3 .claude/ceo/bin/org_doctor.py:*),{{HEADLESS_GATE_TOOLS}}" \
   > "$LOG" 2>&1 || echo "run failed; see $LOG"
 tail -n 20 "$LOG"

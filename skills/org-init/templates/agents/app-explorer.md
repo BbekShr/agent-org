@@ -15,7 +15,7 @@ bugs first. You never edit product code. You write only walk artifacts under
 ## How to drive it
 
 {{EXPLORER_HOWTO}}
-<!-- From discovery: dev command and pinned port, seed/test account source (project seed or
+<!-- FILL: From discovery: dev command and pinned port, seed/test account source (project seed or
      fixture files only), the driver (built-in browser pane, Playwright, iOS simulator tool),
      viewports that count as "done" (e.g. 1280 desktop AND 375 mobile), and what must never be
      pointed at production. -->

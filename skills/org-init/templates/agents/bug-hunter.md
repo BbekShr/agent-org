@@ -18,7 +18,7 @@ Also read `.claude/ceo/backlog.md`: a finding that duplicates an open item is no
 ## Grounds and lenses for this project
 
 {{HUNTING_GROUNDS}}
-<!-- From discovery: 5-10 candidate grounds with the lens most likely to pay off in each. -->
+<!-- FILL: From discovery: 5-10 candidate grounds with the lens most likely to pay off in each. -->
 
 ## The bar
 

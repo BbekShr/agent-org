@@ -18,6 +18,7 @@ WRITE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 class Doctor:
     def __init__(self, root):
         self.root = os.path.abspath(root)
+        self.user_data = []
         self.errors, self.warnings, self.info = [], [], []
 
     def p(self, *parts):
@@ -66,6 +67,7 @@ class Doctor:
         except ValueError as e:
             self.err(f"org.json does not parse: {e}")
             return org_path
+        self.user_data = org.get("user_data_paths", [])
         self.check_org(org)
         agents = self.check_agents(org)
         self.check_ceo(org, agents)
@@ -126,10 +128,17 @@ class Doctor:
                              "inherits Edit/Write. Restrict it.")
                 elif tools & WRITE_TOOLS:
                     self.err(f"{self.rel(path)}: report-only agent has write tools {sorted(tools & WRITE_TOOLS)}")
+            excluded = set()
+            for glob in spec.get("except", []):
+                excluded.update(self.tracked(glob) or [])
             for glob in spec.get("perimeter", []):
                 files = self.tracked(glob)
                 if files is not None and not files:
                     self.err(f"agent `{name}` perimeter glob `{glob}` matches no tracked file")
+                org_owned = [f for f in (files or []) if f not in excluded and self.is_org_file(f, org)]
+                if org_owned:
+                    self.err(f"agent `{name}` perimeter glob `{glob}` covers org files the CEO owns "
+                             f"(e.g. {org_owned[0]}); narrow it or add an `except`")
             lines = text.count("\n")
             if lines > 250:
                 self.warn(f"{self.rel(path)}: {lines} lines; long agents dilute their own instructions")
@@ -140,13 +149,27 @@ class Doctor:
                 self.warn(f".claude/agents/{name}.md looks like an org agent but isn't in org.json")
         return set(declared)
 
+    def is_org_file(self, rel, org):
+        ceo = f".claude/skills/{org.get('ceo_skill', '')}/"
+        verify = f".claude/skills/{org.get('slug', '')}-verify/"
+        return rel.startswith((".claude/agents/", ".claude/ceo/", ".claude/hooks/org_guard", ceo, verify))
+
+    def ignored(self, ref):
+        try:
+            return subprocess.run(["git", "check-ignore", "-q", ref], cwd=self.root,
+                                  timeout=10).returncode == 0
+        except (OSError, subprocess.SubprocessError):
+            return False
+
     def check_refs(self, path, text):
         # Backticked repo-relative paths that should exist. Globs, placeholders, commands and
         # paths under .claude/ceo (created lazily: reports, walks, per-agent learnings) are skipped.
         for ref in set(re.findall(r"`([A-Za-z0-9_.\-/]+/[A-Za-z0-9_.\-]+\.[A-Za-z0-9]+)`", text)):
             if any(c in ref for c in "*<>{}") or ref.startswith((".claude/ceo/", "http", "node_modules/")):
                 continue
-            if not os.path.exists(self.p(ref)):
+            if ref in self.user_data or any(ref.startswith(u.rstrip("*")) for u in self.user_data if u.endswith("*")):
+                continue  # user data is legitimately absent from a clean checkout
+            if not os.path.exists(self.p(ref)) and not self.ignored(ref):
                 self.warn(f"{self.rel(path)}: references `{ref}`, which does not exist")
 
     def check_ceo(self, org, agents):
@@ -184,6 +207,9 @@ class Doctor:
                     hits = sorted(set(re.findall(r"\{\{[A-Z_]+\}\}", text)))
                     if hits:
                         self.err(f"{self.rel(path)}: unfilled placeholders {', '.join(hits[:5])}")
+                    if "<!-- FILL" in text:
+                        self.err(f"{self.rel(path)}: a `<!-- FILL: ... -->` instruction was left in; "
+                                 "replace it with content and delete the comment")
 
     def active_lines(self, path):
         text = open(path, encoding="utf-8").read()
@@ -192,7 +218,7 @@ class Doctor:
 
     def check_memory(self):
         ceo = self.p(".claude", "ceo")
-        for f in ("backlog.md", "memory/codebase.md", "memory/retros.md", "memory/scorecard.md",
+        for f in ("RULES.md", "backlog.md", "memory/codebase.md", "memory/retros.md", "memory/scorecard.md",
                   "AUTONOMY.md", "PRINCIPLES.md"):
             if not os.path.exists(os.path.join(ceo, f)):
                 self.err(f".claude/ceo/{f} is missing")

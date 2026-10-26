@@ -16,7 +16,7 @@ skill is their test suite. Cases live in `.claude/ceo/evals/cases/*.md`; results
 ---
 id: <slug>-<n>
 agent: <agent name in .claude/agents/>
-kind: find-the-bug | fix-the-bug | gate | navigate
+kind: find-the-bug | fix-the-bug | gate | triage | navigate
 base: <commit sha the worktree is checked out at>
 ---
 ## Task
@@ -36,6 +36,9 @@ Kinds:
   test (or an equivalent one) passes and no gate regresses.
 - **gate**: release manager on a commit known to fail (or pass) a gate. Expected: the verdict and
   the failing gate.
+- **triage**: the repro agent handed a report of a bug that a later commit fixed, with `base` at
+  current main. Expected: ALREADY FIXED in the right sha. (And the inverse: `base` before the fix,
+  expected REPRODUCED.)
 - **navigate**: app-explorer or editor handed a vague report ("the share button does nothing").
   Expected: lands on the right screen and source file (tests the feature map).
 
@@ -45,7 +48,11 @@ Kinds:
 2. For each case, in parallel where cases are independent (≤4 at a time; gate cases serially,
    because they bind ports):
    a. `git worktree add --detach <scratchpad>/eval-<id> <base>`. Never use checkout or stash in
-      the main tree. Link or install dependencies as the project needs.
+      the main tree. Set up dependencies the way `/<slug>-verify` says.
+   a2. **Overlay the current org** onto the worktree: copy `.claude/agents/`, `.claude/skills/`
+      (the generated ones), and `.claude/ceo/` minus `evals/`, `reports/`, `walks/` from the main
+      tree. An old base has no org files, so without the overlay every agent stops at its boot
+      sequence. The overlay is uncommitted and dies with the worktree.
    b. Dispatch the case's agent (`subagent_type` = the agent name) with the Task text, the
       worktree path as the repo root, and the usual brief contents (Active lessons, report
       contract). It must not see Expected or Rubric.
@@ -67,7 +74,9 @@ Kinds:
 
 From `git log --since=<last mine or 6 months> -i --grep='fix\|bug\|regress' --name-only`, pick
 up to 10 fixes that touched product code and came with a test. For each, draft a find-the-bug
-case (and a fix-the-bug case when the fix's test is self-contained), assign the owning agent via
+case (and a fix-the-bug case when the fix's test is self-contained). Every file the Task names must
+exist at `base` (`git cat-file -e <base>:<path>`): when the fix created a file, aim the Task at the
+file that held the bug before. Assign the owning agent via
 the ownership map, and show the drafts. Write only the ones the user accepts. Skip fixes whose
 commit message gives away the answer verbatim in a way the Task can't avoid.
 

@@ -25,7 +25,9 @@ C. **Promotion is measured, demotion is automatic.** The scorecard
    edits, reverted, escaped defect. The CEO *proposes* a promotion when the criteria are met; the
    human grants it by editing `org.json`. Any revert or escaped defect makes the CEO drop a level
    itself (the safe direction needs no permission).
-D. **Measure success by PRs that land cleanly and stay clean**, not by activity. A run that
+D. **Measure success by PRs that land cleanly and stay clean**, not by activity. Track it weekly:
+   the expected curve is flat during the investment phase (building tests, bans, the verify skill,
+   evals) and then inflects once trust is earned. A run that
    opens three PRs the human rewrites is worse than a run that opens none.
 E. **The goal state is after-the-fact review:** agents merge their own green-gated PRs and the
    human samples the history. That is L3+, reached only through C.
@@ -39,6 +41,10 @@ F. **Enforce at the strongest layer available.** From strongest to weakest: (1) 
 G. **Push recurring findings down the ladder.** When review catches the same class of defect
    twice, the fix is not a sterner prompt: file a process item to encode it as a lint rule, a
    type, a test, or a structural change. Known foot-guns get banned mechanically.
+G2. **The guard is a tripwire, not a security boundary.** It stops accidents (a stash mid-run, a
+   reflexive `--admin`, an edit to the gate config) cheaply and loudly. A determined bypass via a
+   shell redirect is possible, and it's a firing offence, not a loophole. Gate-strengthening work
+   that must touch a gate file goes through the human (`ALLOW_GATE_EDITS`, created only by them).
 H. **Prefer collocated, agent-friendly structure.** One directory per feature, strong types, and
    explicit boundaries are what let a mid-tier model do the right thing. When the codebase fights
    agents, a deliberate refactor is a legitimate (big-rock) backlog item.
@@ -60,6 +66,13 @@ K. **Write skills from observed failure modes**, not imagined ones. A wrong file
 L. **Agents run the code, not just read it.** Gates, plus the app itself where one exists: the
    browser pane or Playwright for web, the simulator for mobile, profilers/traces for perf claims.
    A perf finding without a measurement is a guess.
+L2. **Every org has a verify skill: its runtime eyes and hands.** `/<slug>-verify` encodes how to
+   set up, start, drive, inspect (traces, profiles, snapshots) and tear down the real software, so
+   no human has to be the "meat proxy" between the agent and the running app. When an agent flails
+   at running something, the fix lands in that skill as a concrete step.
+L3. **Reproduce before fixing.** A bug report is a claim. Triage proves it on current main first
+   (reproduced / already fixed in <sha> / can't reproduce). Most reports against a moving codebase
+   are already fixed or mis-diagnosed, and an agent that "fixes" an unreproduced bug ships a guess.
 M. **A feature map turns vague reports into actions.** For UI projects, `.claude/ceo/feature-map.md`
    lists routes, key UI elements and their selectors/test ids, shortcuts, and navigation paths, so
    an agent handed "the share button is broken" goes straight to the right screen and file.

@@ -66,10 +66,16 @@ def check_edit(tool_input, org):
     if not path or not os.path.exists(path):
         return 0  # creating a file is fine
     rel = os.path.relpath(os.path.abspath(path), ROOT)
+    allow = os.path.join(ROOT, ".claude", "ceo", "ALLOW_GATE_EDITS")
     for gate_file in org.get("gate_files", []):
         if rel == gate_file or os.path.basename(rel) == gate_file:
+            if os.path.exists(allow):
+                return 0
             return block(f"{rel} defines a quality gate. Fix the code so the existing gate "
-                         "passes. If the gate itself is wrong, say so and ask the human.")
+                         "passes. If the item genuinely needs to change the gate (e.g. to ADD a "
+                         "check), put it under 'Needs a human' in the backlog: the human enables "
+                         "gate edits for one run with `touch .claude/ceo/ALLOW_GATE_EDITS`. "
+                         "Agents never create that file.")
     return 0
 
 

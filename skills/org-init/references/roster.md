@@ -4,6 +4,12 @@ Pick agents from this catalog using the signals found in discovery. Every agent 
 `<slug>-<role>.md` and its frontmatter `name` matches the filename. The template for each lives
 in `templates/agents/`.
 
+## Always generated, at every size
+
+`<slug>-release-manager`, `<slug>-security-engineer`, `<slug>-repro`, the CEO skill (the chief of
+staff: coordination, prioritization, routing), and the `<slug>-verify` skill (the org's runtime
+eyes and hands).
+
 ## Org size (choose one; it decides the default roster)
 
 | Size | When | Default roster |
@@ -30,6 +36,7 @@ Common perimeters and the signals that call for them:
 | `core-engineer` | a library: `src/` exporting a public API, no app shell | the library core and its unit tests |
 | `data-engineer` | ETL, bots, cron jobs, scheduled workflows, scrapers | bots/, jobs/, pipelines, workflow scripts |
 | `ai-engineer` | LLM calls, prompts, agent loops, eval harness | prompts, ai/, model boundary, evals |
+| `prompt-engineer` | the product logic itself is prompt/markdown instructions an agent follows (`modes/*.md`, skill files, worker prompts), often with localized mirrors that must stay in sync | prompt files and their mirrors, command wrappers (never the root rules file: that's a protected path) |
 | `infra-engineer` | Terraform, Docker, k8s, deploy config as a primary surface | infra/, deploy config (never applies to prod) |
 
 Each editor writes the test for its own fix. Name the default owner for anything unlisted.
@@ -48,6 +55,7 @@ Each editor writes the test for its own fix. Name the default owner for anything
 | `a11y-critic` | public-facing UI without a design critic (fold into design-critic otherwise) | mid |
 | `ai-quality-critic` | LLM output is the product (grades output quality, never edits prompts) | top |
 | `app-explorer` | a runnable app that can be driven (browser pane, Playwright, simulator) for an `e2e` mode | mid |
+| `repro` | always: reproduces bug reports on current main via the verify skill (powers `triage`; always-on in the cloud at L4) | mid |
 
 Critics grade against a named bar. If a matching skill is installed (e.g. `taste-skill` for
 design, `ponytail` for simplicity, `dataviz` for charts), the critic loads it via the Skill tool
@@ -60,7 +68,10 @@ instead of working from memory. Check the installed-skills list during discovery
 | `researcher` | map the blast radius of an item: touched surface, reuse inventory, risks, conventions | read-only |
 | `architect` | turn item + brief into an ordered plan with a verification plan | read-only (no Bash) |
 | `bug-hunter` | discovery mode: hunt NEW bugs in one ground × one lens, with drafted acceptance criteria | read-only |
-| `rnd` | R&D mode: propose features/process improvements with evidence (web access) | read-only |
+| `rnd` | the PM/product desk: R&D mode proposals (features, process) with evidence and drafted specs; also drafts specs for `request` mode when the ask is large | read-only |
+
+**Mode dependencies override size:** choosing `discover` or `issues` mode always adds
+`bug-hunter`; choosing `rnd` always adds `rnd`; choosing `e2e` always adds `app-explorer`.
 
 At `small`/`standard` size, use the built-in `Explore` agent for research and the built-in
 `Plan` agent (top model) for design instead of generating these.

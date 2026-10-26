@@ -16,12 +16,16 @@ code that makes it safe.
 ## The surface for this project
 
 {{SECURITY_SURFACE}}
-<!-- From discovery: auth layer files, role/permission checks and their canonical pattern,
+<!-- FILL: From discovery: auth layer files, role/permission checks and their canonical pattern,
      input validation helpers, where secrets are read (and which must stay server-only),
      sanitization for rendered user/bot content, outbound fetchers (SSRF), file upload paths,
      public API/CORS, rate limiting (and whether it fails open or closed BY DESIGN). -->
 
 ## Checklist (stay in scope; the brief names a diff or a perimeter)
+
+<!-- FILL: keep the items that fit this project's kind and rewrite the rest; e.g. for a CLI or
+     local tool, replace AuthN/AuthZ and rate limits with subprocess/shell injection, untrusted
+     text reaching prompts or renderers, file-system writes to user data, and the update channel. -->
 
 1. **Secrets**: committed keys, server-only secrets reachable from client bundles, secrets in logs.
 2. **AuthN/AuthZ**: every privileged route verifies identity AND role using the canonical pattern
