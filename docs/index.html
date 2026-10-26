@@ -21,7 +21,7 @@
       <nav class="nav" aria-label="Main">
         <a href="docs.html">Docs</a>
         <a class="hide-sm" href="#how">How it works</a>
-        <a class="hide-sm" href="#team">Sample team</a>
+        <a class="hide-sm" href="#modes">Modes</a>
         <a class="hide-xs" href="https://github.com/BbekShr/agent-org">GitHub</a>
         <button class="theme-toggle" type="button">Theme: auto</button>
       </nav>
@@ -68,12 +68,13 @@
 
     <section class="block" id="how">
       <div class="wrap">
-        <h2>One run, start to finish.</h2>
-        <p class="intro">You invoke the CEO. It orchestrates; it never edits code. Read-only specialists find, one editor fixes, an adversarial board and the release gate judge, and a PR comes back to you.</p>
+        <h2>One run, one team, start to finish.</h2>
+        <p class="intro">You invoke the CEO. Read-only specialists find, one editor fixes, an adversarial board and the release gate judge, and a PR comes back to you. The team shown is what <code>/org-init</code> generates for a standard Next.js + Supabase app with a few bots, with the model each role runs on.</p>
         <figure class="flow-figure">
-          <svg class="flow" viewBox="0 0 1200 620" role="img" aria-label="One org run: you invoke the CEO; it preflights, has read-only scouts assess, decides, hands one editor the build, puts the diff before the review board and the release gate on a frozen tree, and opens a PR you merge. Memory and the scorecard feed the next run, and a guard hook blocks shortcuts throughout.">
+          <svg class="flow" viewBox="0 0 1200 790" role="img" aria-label="One org run with the sample team: you invoke the CEO in your session; it preflights, has read-only scouts and checkers assess (security engineer, silent-failure hunter, repro on sonnet, design critic on opus), decides with a read-only opus plan for hard items, hands one sonnet editor the build, puts the diff before sonnet reviewers (opus on hard diffs) and a haiku release manager on a frozen tree, and opens a PR you merge below L3. Records feed the next run; a guard hook blocks shortcuts.">
           <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--text)"/></marker><marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
-          <text x="40" y="60" font-size="12" font-weight="600" fill="var(--muted)" letter-spacing="0.08em">THE CEO ORCHESTRATES. IT NEVER EDITS CODE.</text>
+          <text x="40" y="52" font-size="12" font-weight="600" fill="var(--muted)" letter-spacing="0.08em">ONE RUN, WITH THE TEAM /org-init GENERATES FOR A NEXT.JS + SUPABASE APP</text>
+          <text x="40" y="72" font-size="12" fill="var(--muted)">The CEO is a skill in your session: it orchestrates and never edits code. Model per role: judgment on the top tier, building and reviewing on the mid tier, mechanical work on the small tier.</text>
           <rect x="40" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
           <text x="110.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">You</text>
           <text x="110.0" y="142" text-anchor="middle" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">/&lt;project&gt;-ceo</text>
@@ -101,89 +102,77 @@
           <rect x="1024" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
           <text x="1094.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">PR</text>
           <text x="1094.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">evidence section</text>
-          <rect x="359" y="250" width="158" height="86" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
-          <text x="438.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Scouts + checkers</text>
-          <text x="438.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, in parallel</text>
-          <text x="438.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">security, repro, bug hunter</text>
-          <line x1="438.0" y1="249" x2="438.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <text x="446.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">findings at file:line</text>
-          <rect x="687" y="250" width="158" height="86" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25"/>
-          <text x="766.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">The owning editor</text>
-          <text x="766.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">the only role that writes</text>
-          <text x="766.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">playbook, test, branch</text>
-          <line x1="766.0" y1="249" x2="766.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <text x="774.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">the diff</text>
-          <rect x="851" y="250" width="158" height="86" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
-          <text x="930.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Review board + gate</text>
-          <text x="930.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, adversarial</text>
-          <text x="930.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">5 lenses + release mgr</text>
-          <line x1="930.0" y1="249" x2="930.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <text x="938.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">CONFIRMED defects</text>
-          <rect x="1015" y="250" width="158" height="86" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
-          <text x="1094.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Who merges</text>
-          <text x="1094.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">by autonomy level</text>
-          <text x="1094.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">L0-L2 you · L3+ agents</text>
-          <line x1="1094.0" y1="161" x2="1094.0" y2="249" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah-accent)"/>
-          <rect x="204" y="400" width="960" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
-          <text x="684.0" y="426" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Records: memory, scorecard, lessons, evals</text>
-          <text x="684.0" y="446" text-anchor="middle" font-size="12" fill="var(--muted)">every run writes them before the PR; the next run's preflight reads them</text>
-          <line x1="1094.0" y1="337" x2="1094.0" y2="399" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
-          <text x="1086.0" y="378" text-anchor="end" font-size="12" fill="var(--muted)">PR outcome: landed, edited, reverted</text>
-          <line x1="274.0" y1="399" x2="274.0" y2="161" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
-          <text x="282.0" y="378" text-anchor="start" font-size="12" fill="var(--muted)">next run</text>
-          <text x="266.0" y="270" text-anchor="end" font-size="12" fill="var(--muted)">a revert or an escaped</text>
-          <text x="266.0" y="286" text-anchor="end" font-size="12" fill="var(--muted)">defect demotes the level</text>
-          <rect x="40" y="520" width="1120" height="64" rx="8" fill="var(--raised)" stroke="var(--accent)" stroke-width="1.25" stroke-dasharray="6 4"/>
-          <text x="60" y="547" font-size="14" font-weight="600" fill="var(--text)">Guard hook on every tool call</text>
-          <text x="60" y="567" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">blocks: gh pr merge --admin · force push · --no-verify · edits to gate and org control files · during a run: merge below L3, push to base, git stash</text>
+          <rect x="331.0" y="236" width="214" height="130" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="438.0" y="262" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Scouts + checkers</text>
+          <text x="438.0" y="282" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, in parallel</text>
+          <text x="343.0" y="306" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">security-engineer</text>
+          <text x="533.0" y="306" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <text x="343.0" y="324" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">silent-failure-hunter</text>
+          <text x="533.0" y="324" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <text x="343.0" y="342" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">design-critic</text>
+          <text x="533.0" y="342" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">opus</text>
+          <text x="343.0" y="360" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">repro</text>
+          <text x="533.0" y="360" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <line x1="438.0" y1="235" x2="438.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="446.0" y="202" text-anchor="start" font-size="12" fill="var(--muted)">findings at file:line</text>
+          <rect x="527.0" y="390" width="150" height="112" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="602.0" y="416" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Plan for hard items</text>
+          <text x="602.0" y="436" text-anchor="middle" font-size="12" fill="var(--muted)">built-in, read-only</text>
+          <text x="539.0" y="460" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">Plan agent</text>
+          <text x="665.0" y="460" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">opus</text>
+          <line x1="602.0" y1="389" x2="602.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="610.0" y="202" text-anchor="start" font-size="12" fill="var(--muted)">the plan</text>
+          <rect x="659.0" y="236" width="214" height="130" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="766.0" y="262" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Builders</text>
+          <text x="766.0" y="282" text-anchor="middle" font-size="12" fill="var(--muted)">the only roles that write</text>
+          <text x="671.0" y="306" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">frontend-engineer</text>
+          <text x="861.0" y="306" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <text x="671.0" y="324" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">backend-engineer</text>
+          <text x="861.0" y="324" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <text x="671.0" y="342" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">data-engineer</text>
+          <text x="861.0" y="342" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <line x1="766.0" y1="235" x2="766.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="774.0" y="202" text-anchor="start" font-size="12" fill="var(--muted)">the diff</text>
+          <rect x="823.0" y="390" width="214" height="112" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="930.0" y="416" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Review board + gate</text>
+          <text x="930.0" y="436" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, adversarial</text>
+          <text x="835.0" y="460" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">reviewer (per lens)</text>
+          <text x="1025.0" y="460" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">sonnet</text>
+          <text x="835.0" y="478" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">  on hard diffs</text>
+          <text x="1025.0" y="478" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">opus</text>
+          <text x="835.0" y="496" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">release-manager</text>
+          <text x="1025.0" y="496" text-anchor="end" font-size="11" font-weight="600" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--accent)">haiku</text>
+          <line x1="930.0" y1="389" x2="930.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="938.0" y="202" text-anchor="start" font-size="12" fill="var(--muted)">CONFIRMED defects</text>
+          <rect x="1019.0" y="236" width="150" height="130" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="1094.0" y="262" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Who merges</text>
+          <text x="1094.0" y="282" text-anchor="middle" font-size="12" fill="var(--muted)">by autonomy level</text>
+          <text x="1031.0" y="306" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">L0-L2</text>
+          <text x="1157.0" y="306" text-anchor="end" font-size="11.5" fill="var(--text)">you</text>
+          <text x="1031.0" y="324" font-size="11.5" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--text)">L3+</text>
+          <text x="1157.0" y="324" text-anchor="end" font-size="11.5" fill="var(--text)">agents, you sample</text>
+          <line x1="1094.0" y1="161" x2="1094.0" y2="235" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah-accent)"/>
+          <rect x="204" y="562" width="960" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="684.0" y="588" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Records: memory, scorecard, lessons, evals</text>
+          <text x="684.0" y="608" text-anchor="middle" font-size="12" fill="var(--muted)">every run writes them before the PR; the next run's preflight reads them</text>
+          <line x1="1094.0" y1="503" x2="1094.0" y2="561" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+          <text x="1086.0" y="540" text-anchor="end" font-size="12" fill="var(--muted)">PR outcome: landed, edited, reverted</text>
+          <line x1="274.0" y1="561" x2="274.0" y2="161" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+          <text x="282.0" y="540" text-anchor="start" font-size="12" fill="var(--muted)">next run</text>
+          <text x="266.0" y="256" text-anchor="end" font-size="12" fill="var(--muted)">a revert or an escaped</text>
+          <text x="266.0" y="272" text-anchor="end" font-size="12" fill="var(--muted)">defect demotes the level</text>
+          <rect x="40" y="662" width="1120" height="64" rx="8" fill="var(--raised)" stroke="var(--accent)" stroke-width="1.25" stroke-dasharray="6 4"/>
+          <text x="60" y="689" font-size="14" font-weight="600" fill="var(--text)">Guard hook on every tool call</text>
+          <text x="60" y="709" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">blocks: gh pr merge --admin · force push · --no-verify · edits to gate and org control files · during a run: merge below L3, push to base, git stash</text>
           </svg>
-          <figcaption>A run writes memory and a scorecard before the PR, and the next run reads them. A guard hook blocks the shortcuts on every tool call.</figcaption>
+          <figcaption>Roles come from the repo's real seams, models from the job: judgment (design critique, the plan for a hard item) on the top tier, building and reviewing on the mid tier, the mechanical gate on the small tier. Defaults top = opus, mid = sonnet, small = haiku; <code>/org-init</code> asks before fixing them. A small library gets three agents; a large repo with public issues adds researcher, architect, bug-hunter and rnd.</figcaption>
         </figure>
         <ol class="rules">
           <li><b>Only builders write code.</b><span>The CEO, the scouts, the reviewers and the release manager have no edit tools, so nobody grades their own work.</span></li>
           <li><b>Green gates are necessary, not sufficient.</b><span>Every diff faces one reviewer per lens and the release gate together, on a frozen tree.</span></li>
           <li><b>Trust is earned.</b><span>Promotion needs scorecard evidence and your say-so. A revert demotes the org on its own. Only you raise the level.</span></li>
         </ol>
-        <p class="more"><a href="docs.html#team">The full team</a> · <a href="docs.html#cycle">The run cycle</a> · <a href="docs.html#guard">The guard</a></p>
-      </div>
-    </section>
-
-    <section class="block" id="team">
-      <div class="wrap">
-        <h2>A sample team.</h2>
-        <p class="intro">The roster comes from the repo's real seams and the model from the job: builders and most checkers on the mid tier, the mechanical gate on the small one, judgment calls on the top one. This is what <code>/org-init</code> generates for a standard Next.js + Supabase app with a few bots.</p>
-        <div class="roster">
-          <div class="rcol ceo">
-            <h3>CEO <span>your session</span></h3>
-            <ul><li><b>/&lt;slug&gt;-ceo</b><span>a skill, not an agent: orchestrates, never edits code</span></li></ul>
-          </div>
-          <div class="rcol">
-            <h3>Builders <span>write code</span></h3>
-            <ul>
-              <li><b>frontend-engineer</b><em>sonnet</em><span>app/, components/, styles</span></li>
-              <li><b>backend-engineer</b><em>sonnet</em><span>API routes, lib/, migrations</span></li>
-              <li><b>data-engineer</b><em>sonnet</em><span>bots/ and scheduled workflows</span></li>
-            </ul>
-          </div>
-          <div class="rcol">
-            <h3>Checkers <span>read-only</span></h3>
-            <ul>
-              <li><b>security-engineer</b><em>sonnet</em><span>always: secrets, auth, injection, exposure</span></li>
-              <li><b>release-manager</b><em>haiku</em><span>always: runs every gate, reports verbatim. Judges nothing, so cheap</span></li>
-              <li><b>reviewer</b><em>sonnet, opus on hard diffs</em><span>one per lens: correctness, security, regression, silent failure, performance</span></li>
-              <li><b>silent-failure-hunter</b><em>sonnet</em><span>write paths, external APIs, bots</span></li>
-              <li><b>design-critic</b><em>opus</em><span>user-facing UI</span></li>
-            </ul>
-          </div>
-          <div class="rcol">
-            <h3>Scouts <span>read-only</span></h3>
-            <ul>
-              <li><b>repro</b><em>sonnet</em><span>always: reproduces a bug on main before anyone fixes it</span></li>
-              <li><b>Plan (built-in)</b><em>opus</em><span>designs hard items; the editor executes the plan</span></li>
-            </ul>
-          </div>
-        </div>
-        <p class="ladder-note">A small library gets three agents (core-engineer, security-engineer, release-manager). A large repo with public issues adds researcher, architect, bug-hunter and rnd. Defaults: top = opus, mid = sonnet, small = haiku; <code>/org-init</code> asks before fixing them. <a href="docs.html#team">Full catalog</a>.</p>
+        <p class="more"><a href="docs.html#team">Full role catalog</a> · <a href="docs.html#cycle">The run cycle</a> · <a href="docs.html#guard">The guard</a></p>
       </div>
     </section>
 
