@@ -15,7 +15,8 @@
     { "name": "feature-check", "cmd": "", "when": "always", "note": "supplied by the CEO's brief per item" }
   ],
   "gate_files": ["tsconfig.json"],
-  "protected_paths": ["CLAUDE.md", ".github/workflows/**", ".env*"],
+  "protected_paths": ["CLAUDE.md", ".github/workflows/**", ".env*", ".claude/ceo/org.json",
+    ".claude/ceo/AUTONOMY.md", ".claude/settings.json", ".claude/hooks/**"],
   "user_data_paths": [],
   "shipped_paths_note": "",
   "agents": [

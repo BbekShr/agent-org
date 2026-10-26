@@ -101,6 +101,12 @@ class Doctor:
         for gf in org.get("gate_files", []):
             if not os.path.exists(self.p(gf)) and not self.tracked(f"**/{gf}"):
                 self.warn(f"gate_files entry `{gf}` matches no file")
+        if os.path.exists(self.p(".claude", "ceo", "DEMOTED")):
+            demoted = open(self.p(".claude", "ceo", "DEMOTED"), encoding="utf-8").read().strip()
+            self.warn(f".claude/ceo/DEMOTED says {demoted or '?'}: a demotion is pending. Set "
+                      "autonomy_level in org.json to match, then delete DEMOTED")
+        self.info.append("control files (always guarded): .claude/ceo/org.json, AUTONOMY.md, "
+                         "DEMOTED, .claude/settings.json, .claude/hooks/")
         self.info.append(f"autonomy {level or '?'} (target {target or 'unset'}), "
                          f"{len(org.get('agents', []))} agents, {len(org.get('gates', []))} gates")
 
@@ -268,10 +274,8 @@ class Doctor:
             self.err(".claude/settings.json missing or unparsable, so the guard is not wired")
             return
         blob = json.dumps(settings.get("hooks", {}))
-        # `edit` only matters when the guard owns gate files; an adopted org may leave that job to
-        # an existing hook (gate_files: []), and two hooks doing one job is worse than one.
-        modes = ("bash", "edit") if org.get("gate_files") else ("bash",)
-        for mode in modes:
+        # `edit` is always required: even with gate_files: [] it guards the org's control files.
+        for mode in ("bash", "edit"):
             if f"org_guard.py\\\" {mode}" not in blob and f"org_guard.py {mode}" not in blob:
                 self.err(f"guard mode `{mode}` is not registered in .claude/settings.json hooks")
 

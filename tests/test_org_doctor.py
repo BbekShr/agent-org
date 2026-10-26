@@ -116,14 +116,19 @@ class DoctorTest(unittest.TestCase):
               "| `demo-ghost` | report-only | x |\n")
         self.assertError("demo-ghost")
 
-    def test_edit_mode_not_required_when_gate_files_empty(self):
+    def test_edit_mode_required_even_when_gate_files_empty(self):
+        # The edit mode also guards the org's control files, so gate_files: [] doesn't make it optional.
         self.org["gate_files"] = []
         self.save()
         settings = json.load(open(os.path.join(self.root, ".claude", "settings.json")))
         settings["hooks"]["PreToolUse"] = [h for h in settings["hooks"]["PreToolUse"] if h["matcher"] == "Bash"]
         write(self.root, ".claude/settings.json", json.dumps(settings))
+        self.assertError("guard mode `edit` is not registered")
+
+    def test_pending_demotion_warns(self):
+        write(self.root, ".claude/ceo/DEMOTED", "L1\n")
         code, out = self.doctor()
-        self.assertFalse(any("not registered" in e for e in out["errors"]), out)
+        self.assertTrue(any("DEMOTED" in w for w in out["warnings"]), out)
 
     def test_relative_and_vendored_refs_resolve(self):
         write(self.root, ".claude/skills/vendor/x/review/STANDARDS.md", "x")

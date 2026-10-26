@@ -109,6 +109,52 @@ class GuardTest(unittest.TestCase):
         open(os.path.join(self.root, ".claude", "ceo", "ALLOW_GATE_EDITS"), "w").close()
         self.assertEqual(self.run_guard("edit", {"file_path": path}), 0)
 
+    def touch(self, rel):
+        path = os.path.join(self.root, rel)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        open(path, "w").close()
+        return path
+
+    def test_control_files_blocked_even_when_not_in_gate_files(self):
+        self.set_org({"gate_files": []})
+        for rel in (".claude/ceo/org.json", ".claude/ceo/AUTONOMY.md", ".claude/settings.json",
+                    ".claude/hooks/org_guard.py"):
+            path = self.touch(rel) if rel != ".claude/ceo/org.json" else os.path.join(self.root, rel)
+            self.assertEqual(self.run_guard("edit", {"file_path": path}), 2, rel)
+            self.assertEqual(self.run_guard("edit", {"file_path": path}, org_run=False), 2, rel)
+        # Matched on the repo-relative path: an unrelated org.json elsewhere is fine.
+        self.assertEqual(self.run_guard("edit", {"file_path": self.touch("packages/x/org.json")}), 0)
+
+    def test_control_file_escape_hatch(self):
+        self.touch(".claude/ceo/ALLOW_GATE_EDITS")
+        path = os.path.join(self.root, ".claude", "ceo", "org.json")
+        self.assertEqual(self.run_guard("edit", {"file_path": path}), 0)
+
+    def test_shell_writes_to_control_files_blocked_during_a_run(self):
+        for cmd in ("echo '{}' > .claude/ceo/org.json", "sed -i '' 's/L1/L3/' .claude/ceo/org.json",
+                    "cat x | tee .claude/settings.json", "cp evil.py .claude/hooks/org_guard.py",
+                    "rm .claude/ceo/DEMOTED"):
+            self.assertEqual(self.bash(cmd), 2, cmd)
+            self.assertEqual(self.bash(cmd, org_run=False), 0, cmd)
+        self.assertEqual(self.bash("cat .claude/ceo/org.json"), 0)
+        self.assertEqual(self.bash("git diff .claude/settings.json > /tmp/d"), 0)
+
+    def test_demoted_file_lowers_the_level(self):
+        self.set_org({"autonomy_level": "L3"})
+        self.assertEqual(self.bash("gh pr merge 12 --squash"), 0)
+        with open(self.touch(".claude/ceo/DEMOTED"), "w") as f:
+            f.write("L1\n")
+        self.assertEqual(self.bash("gh pr merge 12 --squash"), 2)
+        with open(os.path.join(self.root, ".claude", "ceo", "DEMOTED"), "w") as f:
+            f.write("L4")  # can't raise above org.json
+        self.assertEqual(self.bash("gh pr merge 12 --squash"), 0)
+        self.set_org({"autonomy_level": "L1"})
+        self.assertEqual(self.bash("gh pr merge 12 --squash"), 2)
+        with open(os.path.join(self.root, ".claude", "ceo", "DEMOTED"), "w") as f:
+            f.write("garbage")  # unreadable level fails safe
+        self.set_org({"autonomy_level": "L3"})
+        self.assertEqual(self.bash("gh pr merge 12 --squash"), 2)
+
     def test_stop_check_runs_once_per_batch(self):
         os.makedirs(os.path.join(self.root, "src"))
         open(os.path.join(self.root, "src", "a.ts"), "w").close()

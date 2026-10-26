@@ -3,7 +3,16 @@
 `org.json` → `"autonomy_level": "L0".."L4"`. The CEO reads it in preflight and refuses anything
 the level doesn't unlock. The guard enforces it mechanically during org runs only: a human working
 in their own session can still merge or push as they always have. **Only the human raises the level.** The CEO lowers it itself on a
-demotion trigger, and says so at the top of the report.
+demotion trigger by creating `.claude/ceo/DEMOTED` with the new level, and says so at the top of
+the report. The guard takes the lower of the two levels, so a demotion binds at once; the human
+later sets `org.json` to match and deletes DEMOTED.
+
+**Control files.** `org.json`, `AUTONOMY.md`, `DEMOTED`, `.claude/settings.json` and everything in
+`.claude/hooks/` decide what the org may do, so the agents they govern can't edit them. The guard
+hard-codes this list (it is not read from `org.json`, so it can't be edited away) and blocks Edit
+and Write calls on it always, and shell writes to it (`>`, `sed -i`, `tee`, `cp`, `mv`, `rm`)
+during org runs. It is a seatbelt, not a wall: a determined shell command can still get round
+it, and `ALLOW_GATE_EDITS` is honour-system. The boundary is the human-merged PR.
 
 | Level | Name | Unlocks | Merge | Schedule |
 |---|---|---|---|---|
