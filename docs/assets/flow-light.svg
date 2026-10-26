@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" font-family='"Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif' style="background:#f5f6f5">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#15181a"/></marker><marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0a7650"/></marker></defs>
+<text x="40" y="60" font-size="12" font-weight="600" fill="#586068" letter-spacing="0.08em">THE CEO ORCHESTRATES. IT NEVER EDITS CODE.</text>
+<rect x="40" y="96" width="140" height="64" rx="8" fill="#e2f1ea" stroke="#0a7650" stroke-width="1.25"/>
+<text x="110.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">You</text>
+<text x="110.0" y="142" text-anchor="middle" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="#586068">/&lt;project&gt;-ceo</text>
+<line x1="180" y1="128.0" x2="203" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="204" y="96" width="140" height="64" rx="8" fill="#fbfbfa" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="274.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Preflight</text>
+<text x="274.0" y="142" text-anchor="middle" font-size="12" fill="#586068">kill switch, level, tree</text>
+<line x1="344" y1="128.0" x2="367" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="368" y="96" width="140" height="64" rx="8" fill="#fbfbfa" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="438.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Assess</text>
+<text x="438.0" y="142" text-anchor="middle" font-size="12" fill="#586068">specialists, parallel</text>
+<line x1="508" y1="128.0" x2="531" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="532" y="96" width="140" height="64" rx="8" fill="#fbfbfa" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="602.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Decide</text>
+<text x="602.0" y="142" text-anchor="middle" font-size="12" fill="#586068">re-verify, rank, cap</text>
+<line x1="672" y1="128.0" x2="695" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="696" y="96" width="140" height="64" rx="8" fill="#fbfbfa" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="766.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Build</text>
+<text x="766.0" y="142" text-anchor="middle" font-size="12" fill="#586068">one editor, one branch</text>
+<line x1="836" y1="128.0" x2="859" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="860" y="96" width="140" height="64" rx="8" fill="#fbfbfa" stroke="#0a7650" stroke-width="1.25"/>
+<text x="930.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Review + gate</text>
+<text x="930.0" y="142" text-anchor="middle" font-size="12" fill="#586068">frozen tree</text>
+<line x1="1000" y1="128.0" x2="1023" y2="128.0" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<rect x="1024" y="96" width="140" height="64" rx="8" fill="#e2f1ea" stroke="#0a7650" stroke-width="1.25"/>
+<text x="1094.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">PR</text>
+<text x="1094.0" y="142" text-anchor="middle" font-size="12" fill="#586068">evidence section</text>
+<rect x="359" y="250" width="158" height="86" rx="8" fill="#eef1ef" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="438.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Scouts + checkers</text>
+<text x="438.0" y="296" text-anchor="middle" font-size="12" fill="#586068">read-only, in parallel</text>
+<text x="438.0" y="316" text-anchor="middle" font-size="11.5" fill="#586068">security, repro, bug hunter</text>
+<line x1="438.0" y1="249" x2="438.0" y2="161" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="446.0" y="210" text-anchor="start" font-size="12" fill="#586068">findings at file:line</text>
+<rect x="687" y="250" width="158" height="86" rx="8" fill="#fbfbfa" stroke="#0a7650" stroke-width="1.25"/>
+<text x="766.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">The owning editor</text>
+<text x="766.0" y="296" text-anchor="middle" font-size="12" fill="#586068">the only role that writes</text>
+<text x="766.0" y="316" text-anchor="middle" font-size="11.5" fill="#586068">playbook, test, branch</text>
+<line x1="766.0" y1="249" x2="766.0" y2="161" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="774.0" y="210" text-anchor="start" font-size="12" fill="#586068">the diff</text>
+<rect x="851" y="250" width="158" height="86" rx="8" fill="#eef1ef" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="930.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Review board + gate</text>
+<text x="930.0" y="296" text-anchor="middle" font-size="12" fill="#586068">read-only, adversarial</text>
+<text x="930.0" y="316" text-anchor="middle" font-size="11.5" fill="#586068">5 lenses + release mgr</text>
+<line x1="930.0" y1="249" x2="930.0" y2="161" stroke="#15181a" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="938.0" y="210" text-anchor="start" font-size="12" fill="#586068">CONFIRMED defects</text>
+<rect x="1015" y="250" width="158" height="86" rx="8" fill="#e2f1ea" stroke="#0a7650" stroke-width="1.25"/>
+<text x="1094.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Who merges</text>
+<text x="1094.0" y="296" text-anchor="middle" font-size="12" fill="#586068">by autonomy level</text>
+<text x="1094.0" y="316" text-anchor="middle" font-size="11.5" fill="#586068">L0-L2 you · L3+ agents</text>
+<line x1="1094.0" y1="161" x2="1094.0" y2="249" stroke="#0a7650" stroke-width="1.5" marker-end="url(#ah-accent)"/>
+<rect x="204" y="400" width="960" height="64" rx="8" fill="#fbfbfa" stroke="#c9cfcc" stroke-width="1.25"/>
+<text x="684.0" y="426" text-anchor="middle" font-size="15" font-weight="600" fill="#15181a">Records: memory, scorecard, lessons, evals</text>
+<text x="684.0" y="446" text-anchor="middle" font-size="12" fill="#586068">every run writes them before the PR; the next run's preflight reads them</text>
+<line x1="1094.0" y1="337" x2="1094.0" y2="399" stroke="#15181a" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="1086.0" y="378" text-anchor="end" font-size="12" fill="#586068">PR outcome: landed, edited, reverted</text>
+<line x1="274.0" y1="399" x2="274.0" y2="161" stroke="#15181a" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="282.0" y="378" text-anchor="start" font-size="12" fill="#586068">next run</text>
+<text x="266.0" y="270" text-anchor="end" font-size="12" fill="#586068">a revert or an escaped</text>
+<text x="266.0" y="286" text-anchor="end" font-size="12" fill="#586068">defect demotes the level</text>
+<rect x="40" y="520" width="1120" height="64" rx="8" fill="#eef1ef" stroke="#0a7650" stroke-width="1.25" stroke-dasharray="6 4"/>
+<text x="60" y="547" font-size="14" font-weight="600" fill="#15181a">Guard hook on every tool call</text>
+<text x="60" y="567" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="#586068">blocks: gh pr merge --admin · force push · --no-verify · edits to gate and org control files · during a run: merge below L3, push to base, git stash</text>
+</svg>

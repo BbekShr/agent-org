@@ -20,8 +20,8 @@
       <a class="brand" href="./">agent<span>-</span>org</a>
       <nav class="nav" aria-label="Main">
         <a href="docs.html">Docs</a>
-        <a class="hide-sm" href="docs.html#team">Team</a>
-        <a class="hide-sm" href="docs.html#trust-curve">Trust curve</a>
+        <a class="hide-sm" href="#how">How it works</a>
+        <a class="hide-sm" href="#team">Sample team</a>
         <a class="hide-xs" href="https://github.com/BbekShr/agent-org">GitHub</a>
         <button class="theme-toggle" type="button">Theme: auto</button>
       </nav>
@@ -32,10 +32,10 @@
     <section class="hero">
       <div class="wrap">
         <div>
-          <h1 class="rise">A CEO and a team for every repo.<br><span class="dim">Autonomy earned on evidence.</span></h1>
-          <p class="lead rise d2">Run <code>/org-init</code> in Claude Code. Get specialist agents, a review board, and guardrails fitted to your codebase.</p>
+          <h1 class="rise">An agent team for your repo.<br><span class="dim">You merge until it earns more.</span></h1>
+          <p class="lead rise d2">Agents find bugs, fix them and open PRs. Reviewers can't edit code, a guard hook blocks the shortcuts, and every miss a human catches becomes a test.</p>
           <div class="ctas rise d3">
-            <a class="btn btn-primary" href="docs.html#install">Get started</a>
+            <a class="btn btn-primary" href="#how">See how it works</a>
             <a class="btn" href="https://github.com/BbekShr/agent-org">View on GitHub</a>
           </div>
         </div>
@@ -48,10 +48,11 @@
           </div>
           <p>Then, inside your project:</p>
           <div class="codeblock">
-            <pre><code>/org-init</code></pre>
+            <pre><code>/org-init
+/&lt;project&gt;-ceo audit</code></pre>
             <button class="copy" type="button">Copy</button>
           </div>
-          <p>It reads the repo, asks up to four questions, and works on a branch. Nothing is pushed without asking.</p>
+          <p>About 4 seconds to install. <code>/org-init</code> reads the repo and works on a branch; <code>audit</code> is a read-only report. Stop anything with <code>touch .claude/ceo/PAUSE</code>.</p>
         </div>
       </div>
     </section>
@@ -59,68 +60,150 @@
     <div class="stats" role="list">
       <div class="wrap">
         <div class="stat" role="listitem"><b>4</b><span>production agent orgs it was distilled from</span></div>
-        <div class="stat" role="listitem"><b>46</b><span>rules, many traced to real incidents</span></div>
-        <div class="stat" role="listitem"><b>12</b><span>agent roles, staffed from your repo's real structure</span></div>
-        <div class="stat" role="listitem"><b>10/10</b><span>on a real bug a human had to find by hand</span></div>
+        <div class="stat" role="listitem"><b>28</b><span>principles, each with its reason, many traced to a real incident</span></div>
+        <div class="stat" role="listitem"><b>23</b><span>agent roles in the catalog, staffed from your repo's real seams</span></div>
+        <div class="stat" role="listitem"><b>10/10</b><span>first eval case: a real bug a human had found by hand. One case, not a benchmark</span></div>
       </div>
     </div>
 
-    <section class="block" id="team">
+    <section class="block" id="how">
       <div class="wrap">
-        <h2>A team, not a chat window.</h2>
-        <p class="intro">Only builders can change code. Everyone else checks or scouts, with no edit tools at all, so a reviewer can never quietly fix what it was asked to judge.</p>
-        <div class="team">
-          <div class="cell ceo">
-            <h3>CEO</h3>
-            <p class="access">the /&lt;project&gt;-ceo skill</p>
-            <p>The chief of staff. It assesses, decides, writes the briefs, verifies through the review board and the release gate, and ships behind a PR. It does not do department work.</p>
-          </div>
-          <div class="cell builders">
-            <h3>Builders</h3>
-            <p class="access">write code</p>
-            <ul>
-              <li><b>One editor per code area</b><span>named after your seams, not a generic list</span></li>
-              <li><b>Frontend, backend, mobile</b><span>for apps with a client and a server</span></li>
-              <li><b>Core, data, AI, prompt engineer</b><span>for libraries, pipelines, model code, prompt files</span></li>
-            </ul>
-          </div>
-          <div class="cell checkers">
-            <h3>Checkers</h3>
-            <p class="access">read-only</p>
-            <ul>
-              <li><b>Security engineer</b><span class="tag">always</span><span>secrets, auth, injection, data exposure, dependencies</span></li>
-              <li><b>Release manager</b><span class="tag">always</span><span>runs every gate in order, reports output verbatim</span></li>
-              <li><b>Reviewers</b><span>one per lens: correctness, regression, security, silent failure, performance</span></li>
-              <li><b>Silent-failure hunter</b><span>swallowed errors and writes nobody checked</span></li>
-              <li><b>Critics</b><span>design, motion, accessibility, AI quality, where they fit</span></li>
-            </ul>
-          </div>
-          <div class="cell scouts">
-            <h3>Scouts</h3>
-            <p class="access">read-only</p>
-            <ul>
-              <li><b>Repro</b><span>reproduces a bug report on main before anyone fixes it</span></li>
-              <li><b>Bug hunter</b><span>finds new bugs, one area and one lens at a time</span></li>
-              <li><b>R&amp;D and PM desk</b><span>proposes features with evidence</span></li>
-              <li><b>App explorer</b><span>drives the running app end to end</span></li>
-            </ul>
-          </div>
-        </div>
+        <h2>One run, start to finish.</h2>
+        <p class="intro">You invoke the CEO. It orchestrates; it never edits code. Read-only specialists find, one editor fixes, an adversarial board and the release gate judge, and a PR comes back to you.</p>
+        <figure class="flow-figure">
+          <svg class="flow" viewBox="0 0 1200 620" role="img" aria-label="One org run: you invoke the CEO; it preflights, has read-only scouts assess, decides, hands one editor the build, puts the diff before the review board and the release gate on a frozen tree, and opens a PR you merge. Memory and the scorecard feed the next run, and a guard hook blocks shortcuts throughout.">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--text)"/></marker><marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+          <text x="40" y="60" font-size="12" font-weight="600" fill="var(--muted)" letter-spacing="0.08em">THE CEO ORCHESTRATES. IT NEVER EDITS CODE.</text>
+          <rect x="40" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="110.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">You</text>
+          <text x="110.0" y="142" text-anchor="middle" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">/&lt;project&gt;-ceo</text>
+          <line x1="180" y1="128.0" x2="203" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="204" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="274.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Preflight</text>
+          <text x="274.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">kill switch, level, tree</text>
+          <line x1="344" y1="128.0" x2="367" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="368" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="438.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Assess</text>
+          <text x="438.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">specialists, parallel</text>
+          <line x1="508" y1="128.0" x2="531" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="532" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="602.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Decide</text>
+          <text x="602.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">re-verify, rank, cap</text>
+          <line x1="672" y1="128.0" x2="695" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="696" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="766.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Build</text>
+          <text x="766.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">one editor, one branch</text>
+          <line x1="836" y1="128.0" x2="859" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="860" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="930.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Review + gate</text>
+          <text x="930.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">frozen tree</text>
+          <line x1="1000" y1="128.0" x2="1023" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <rect x="1024" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="1094.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">PR</text>
+          <text x="1094.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">evidence section</text>
+          <rect x="359" y="250" width="158" height="86" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="438.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Scouts + checkers</text>
+          <text x="438.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, in parallel</text>
+          <text x="438.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">security, repro, bug hunter</text>
+          <line x1="438.0" y1="249" x2="438.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="446.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">findings at file:line</text>
+          <rect x="687" y="250" width="158" height="86" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="766.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">The owning editor</text>
+          <text x="766.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">the only role that writes</text>
+          <text x="766.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">playbook, test, branch</text>
+          <line x1="766.0" y1="249" x2="766.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="774.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">the diff</text>
+          <rect x="851" y="250" width="158" height="86" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="930.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Review board + gate</text>
+          <text x="930.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">read-only, adversarial</text>
+          <text x="930.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">5 lenses + release mgr</text>
+          <line x1="930.0" y1="249" x2="930.0" y2="161" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
+          <text x="938.0" y="210" text-anchor="start" font-size="12" fill="var(--muted)">CONFIRMED defects</text>
+          <rect x="1015" y="250" width="158" height="86" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <text x="1094.0" y="276" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Who merges</text>
+          <text x="1094.0" y="296" text-anchor="middle" font-size="12" fill="var(--muted)">by autonomy level</text>
+          <text x="1094.0" y="316" text-anchor="middle" font-size="11.5" fill="var(--muted)">L0-L2 you · L3+ agents</text>
+          <line x1="1094.0" y1="161" x2="1094.0" y2="249" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ah-accent)"/>
+          <rect x="204" y="400" width="960" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <text x="684.0" y="426" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Records: memory, scorecard, lessons, evals</text>
+          <text x="684.0" y="446" text-anchor="middle" font-size="12" fill="var(--muted)">every run writes them before the PR; the next run's preflight reads them</text>
+          <line x1="1094.0" y1="337" x2="1094.0" y2="399" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+          <text x="1086.0" y="378" text-anchor="end" font-size="12" fill="var(--muted)">PR outcome: landed, edited, reverted</text>
+          <line x1="274.0" y1="399" x2="274.0" y2="161" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+          <text x="282.0" y="378" text-anchor="start" font-size="12" fill="var(--muted)">next run</text>
+          <text x="266.0" y="270" text-anchor="end" font-size="12" fill="var(--muted)">a revert or an escaped</text>
+          <text x="266.0" y="286" text-anchor="end" font-size="12" fill="var(--muted)">defect demotes the level</text>
+          <rect x="40" y="520" width="1120" height="64" rx="8" fill="var(--raised)" stroke="var(--accent)" stroke-width="1.25" stroke-dasharray="6 4"/>
+          <text x="60" y="547" font-size="14" font-weight="600" fill="var(--text)">Guard hook on every tool call</text>
+          <text x="60" y="567" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">blocks: gh pr merge --admin · force push · --no-verify · edits to gate and org control files · during a run: merge below L3, push to base, git stash</text>
+          </svg>
+          <figcaption>A run writes memory and a scorecard before the PR, and the next run reads them. A guard hook blocks the shortcuts on every tool call.</figcaption>
+        </figure>
+        <ol class="rules">
+          <li><b>Only builders write code.</b><span>The CEO, the scouts, the reviewers and the release manager have no edit tools, so nobody grades their own work.</span></li>
+          <li><b>Green gates are necessary, not sufficient.</b><span>Every diff faces one reviewer per lens and the release gate together, on a frozen tree.</span></li>
+          <li><b>Trust is earned.</b><span>Promotion needs scorecard evidence and your say-so. A revert demotes the org on its own. Only you raise the level.</span></li>
+        </ol>
+        <p class="more"><a href="docs.html#team">The full team</a> · <a href="docs.html#cycle">The run cycle</a> · <a href="docs.html#guard">The guard</a></p>
       </div>
     </section>
 
-    <section class="block" id="cycle">
+    <section class="block" id="team">
       <div class="wrap">
-        <h2>Every run follows the same cycle.</h2>
-        <p class="intro">Green gates are necessary, not sufficient. The review board exists for the defects no test can see.</p>
-        <ol class="cycle">
-          <li><b>Preflight</b><span>Kill switch, clean tree, autonomy level, open PRs, org health.</span></li>
-          <li><b>Assess</b><span>Report-only specialists, in parallel.</span></li>
-          <li><b>Decide</b><span>Re-verify each finding at file:line. Rank. Cap the run.</span></li>
-          <li><b>Build</b><span>The owning editor, a playbook, a proving test, a branch.</span></li>
-          <li class="board"><b>Review and gate</b><span>Adversarial lenses and the release gate together, on a frozen tree.</span></li>
-          <li><b>Records, then PR</b><span>Memory, scorecard, a retro line. Then the PR.</span></li>
-        </ol>
+        <h2>A sample team.</h2>
+        <p class="intro">The roster comes from the repo's real seams and the model from the job: builders and most checkers on the mid tier, the mechanical gate on the small one, judgment calls on the top one. This is what <code>/org-init</code> generates for a standard Next.js + Supabase app with a few bots.</p>
+        <div class="roster">
+          <div class="rcol ceo">
+            <h3>CEO <span>your session</span></h3>
+            <ul><li><b>/&lt;slug&gt;-ceo</b><span>a skill, not an agent: orchestrates, never edits code</span></li></ul>
+          </div>
+          <div class="rcol">
+            <h3>Builders <span>write code</span></h3>
+            <ul>
+              <li><b>frontend-engineer</b><em>sonnet</em><span>app/, components/, styles</span></li>
+              <li><b>backend-engineer</b><em>sonnet</em><span>API routes, lib/, migrations</span></li>
+              <li><b>data-engineer</b><em>sonnet</em><span>bots/ and scheduled workflows</span></li>
+            </ul>
+          </div>
+          <div class="rcol">
+            <h3>Checkers <span>read-only</span></h3>
+            <ul>
+              <li><b>security-engineer</b><em>sonnet</em><span>always: secrets, auth, injection, exposure</span></li>
+              <li><b>release-manager</b><em>haiku</em><span>always: runs every gate, reports verbatim. Judges nothing, so cheap</span></li>
+              <li><b>reviewer</b><em>sonnet, opus on hard diffs</em><span>one per lens: correctness, security, regression, silent failure, performance</span></li>
+              <li><b>silent-failure-hunter</b><em>sonnet</em><span>write paths, external APIs, bots</span></li>
+              <li><b>design-critic</b><em>opus</em><span>user-facing UI</span></li>
+            </ul>
+          </div>
+          <div class="rcol">
+            <h3>Scouts <span>read-only</span></h3>
+            <ul>
+              <li><b>repro</b><em>sonnet</em><span>always: reproduces a bug on main before anyone fixes it</span></li>
+              <li><b>Plan (built-in)</b><em>opus</em><span>designs hard items; the editor executes the plan</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="ladder-note">A small library gets three agents (core-engineer, security-engineer, release-manager). A large repo with public issues adds researcher, architect, bug-hunter and rnd. Defaults: top = opus, mid = sonnet, small = haiku; <code>/org-init</code> asks before fixing them. <a href="docs.html#team">Full catalog</a>.</p>
+      </div>
+    </section>
+
+    <section class="block" id="modes">
+      <div class="wrap">
+        <h2>One CEO, ten modes.</h2>
+        <p class="intro"><code>/&lt;project&gt;-ceo &lt;mode&gt;</code>. Every mode starts with preflight and ends with a report; apply modes end at a PR. The autonomy level decides which are open.</p>
+        <div class="modes">
+          <div class="mode"><b>audit</b><em>read-only · L0</em><span>The report-only specialists write a board report. Nothing changes. Start here.</span></div>
+          <div class="mode"><b>light</b><em>PR · L1 · default</em><span>Fast assess, then fix the top 1 to 3 items.</span></div>
+          <div class="mode"><b>deep</b><em>PR · L1</em><span>Every specialist, every finding surfaced, fixes batched by owner.</span></div>
+          <div class="mode"><b>&lt;ID&gt;</b><em>PR · L1</em><span>One named backlog item through the full pipeline.</span></div>
+          <div class="mode"><b>request "&lt;ask&gt;"</b><em>PR · L1</em><span>Plain words from anyone, engineer or not, into a spec, then built.</span></div>
+          <div class="mode"><b>triage "&lt;bug&gt;"</b><em>records or PR · L0</em><span>Reproduce the report on main first. Then confirm fixed, file it, or fix it.</span></div>
+          <div class="mode opt"><b>discover</b><em>records · L0</em><span>Hunt and file new bugs, one area and one lens at a time. <code>discover fix</code> also fixes them (L3).</span></div>
+          <div class="mode opt"><b>rnd</b><em>records · L0</em><span>Propose features and process changes with evidence. Never builds in the same run.</span></div>
+          <div class="mode opt"><b>issues</b><em>records · L0</em><span>Triage open GitHub issues, through the untrusted-input screen, into backlog items.</span></div>
+          <div class="mode opt"><b>e2e</b><em>PR · L1</em><span>Drive the running app: find, fix, re-drive, ship. Local only, never production.</span></div>
+        </div>
+        <p class="ladder-note">The last four are optional; <code>/org-init</code> asks which to include. Stop any run with <code>touch .claude/ceo/PAUSE</code>.</p>
       </div>
     </section>
 
@@ -164,47 +247,6 @@ warn   learnings/_shared.md: ## Active has 48 lines (&gt;40)
 
 0 error(s), 1 warning(s)</code></pre>
         </div>
-      </div>
-    </section>
-
-    <section class="block" id="guard">
-      <div class="wrap">
-        <h2>The shortcuts are blocked, not discouraged.</h2>
-        <p class="intro">A guard hook enforces the rules that matter. It binds the org, never you: your own sessions work as they always have.</p>
-        <div class="guard">
-          <div>
-            <h3>Blocked for everyone</h3>
-            <p class="who">Never right, whoever is driving.</p>
-            <ul>
-              <li><code>gh pr merge --admin</code></li>
-              <li>Force pushes without a lease</li>
-              <li><code>--no-verify</code> on commits and pushes</li>
-              <li>Edits to the files that define the gates</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Blocked during an org run</h3>
-            <p class="who">The autonomy level, enforced.</p>
-            <ul>
-              <li>Merging below L3</li>
-              <li>Pushing to the base branch</li>
-              <li><code>git stash</code>, which is shared by every worktree</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="block" id="learning">
-      <div class="wrap">
-        <h2>It gets better every run.</h2>
-        <p class="intro">Memory has owners and budgets, so lessons stay sharp instead of piling up.</p>
-        <dl class="loop">
-          <dt>Lessons</dt><dd>Agents report durable lessons; the CEO curates them. Only a short active list enters each brief.</dd>
-          <dt>Scorecard</dt><dd>Every PR's fate: landed clean, edited, reverted. It is the evidence for each promotion.</dd>
-          <dt>Evals</dt><dd>A bug a human had to find becomes a test case, so the same miss cannot happen silently again.</dd>
-          <dt>Feedback, opt-in</dt><dd>Problems with the templates themselves can go back to agent-org as an issue or PR, details stripped, sent only on your yes.</dd>
-        </dl>
       </div>
     </section>
 
