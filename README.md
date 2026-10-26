@@ -31,7 +31,7 @@ Install takes about 4 seconds. Stop everything at any time with `touch .claude/c
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/flow-dark.svg">
-  <img alt="One org run: you invoke the CEO; it preflights, has read-only scouts assess, decides, hands one editor the build, puts the diff before the review board and the release gate on a frozen tree, and opens a PR you merge. Memory and the scorecard feed the next run, and a guard hook blocks shortcuts throughout." src="docs/assets/flow-light.svg" width="1200">
+  <img alt="One org run with the sample team and the model per role: you invoke the CEO in your session; read-only scouts and checkers assess (security engineer, silent-failure hunter and repro on sonnet, design critic on opus); a read-only opus plan for hard items; one sonnet editor builds; sonnet reviewers (opus on hard diffs) and a haiku release manager judge on a frozen tree; a PR you merge below L3. Records feed the next run; a guard hook blocks shortcuts." src="docs/assets/flow-light.svg" width="1200">
 </picture>
 
 Three rules hold the whole thing up:
@@ -43,32 +43,17 @@ Three rules hold the whole thing up:
 3. **Trust is earned.** An org starts at L0 or L1. Promotion needs scorecard evidence and your
    say-so; a revert demotes it on its own. Only you raise the level.
 
-## A sample team
+## The team and its models
 
-The roster comes from the repo's real seams, and the model from the job. Builders and most
-checkers run on the mid tier; the cheap, mechanical gate runs on the small one; judgment calls
-(design critique, the plan for a hard item) go to the top tier. Defaults: top = `opus`,
-mid = `sonnet`, small = `haiku`; `/org-init` asks before fixing them.
+The diagram shows the team `/org-init` generates for a standard Next.js + Supabase app with a
+few bots. Roles come from the repo's real seams; the model comes from the job: judgment calls
+(design critique, the read-only plan for a hard item) run on the top tier, building and
+reviewing on the mid tier, the mechanical release gate on the small tier. Defaults are
+top = `opus`, mid = `sonnet`, small = `haiku`; `/org-init` asks before fixing them.
 
-For a standard-size Next.js + Supabase app with a few scheduled bots, `/org-init` generates:
-
-| Agent | Group | Model | Why this one |
-|---|---|---|---|
-| `/<slug>-ceo` | CEO | your session | A skill, not an agent: it orchestrates and never edits code |
-| `<slug>-frontend-engineer` | builder | sonnet | `app/`, `components/`, styles. Writes the proving test for its own fix |
-| `<slug>-backend-engineer` | builder | sonnet | API routes, `lib/`, migrations |
-| `<slug>-data-engineer` | builder | sonnet | `bots/` and the scheduled workflows |
-| `<slug>-security-engineer` | checker | sonnet | Always generated: secrets, auth, injection, exposure |
-| `<slug>-release-manager` | checker | haiku | Always generated: runs every gate in order, reports verbatim. Cheap because it judges nothing |
-| `<slug>-reviewer` | checker | sonnet, opus on hard diffs | Spawned once per lens: correctness, security, regression, silent failure, performance |
-| `<slug>-silent-failure-hunter` | checker | sonnet | The app has write paths, external APIs and bots |
-| `<slug>-design-critic` | checker | opus | User-facing UI where look and feel matter |
-| `<slug>-repro` | scout | sonnet | Always generated: reproduces a bug report on main before anyone fixes it |
-| built-in `Plan` | scout | opus | Read-only design for hard items; the editor then executes the plan |
-
-A small library gets three (`core-engineer`, `security-engineer`, `release-manager`); a large
-repo with public issues adds `researcher`, `architect`, `bug-hunter` and `rnd`. The full catalog
-and the signals that pick each role are in
+A small library gets three agents (`core-engineer`, `security-engineer`, `release-manager`); a
+large repo with public issues adds `researcher`, `architect`, `bug-hunter` and `rnd`. The full
+catalog and the signals that pick each role are in
 [`roster.md`](skills/org-init/references/roster.md).
 
 | Level | Unlocks | Who merges |
