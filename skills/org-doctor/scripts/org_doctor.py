@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 
+PLAYBOOK_KINDS = ("bug-fix", "perf", "feature", "refactor", "security-fix", "upgrade", "test-gap")
 LEVELS = ("L0", "L1", "L2", "L3", "L4")
 WRITE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 
@@ -75,6 +76,8 @@ class Doctor:
         self.check_memory()
         self.check_guard(org)
         self.check_evals(org)
+        self.check_skills(org)
+        self.check_playbooks(org)
         if os.path.exists(self.p(".claude", "ceo", "PAUSE")):
             self.info.append("kill switch is ON (.claude/ceo/PAUSE present): every CEO mode aborts")
         return org_path
@@ -263,6 +266,36 @@ class Doctor:
         for a in org.get("agents", []):
             if a.get("access") == "editor" and a.get("name") not in covered:
                 self.warn(f"editor `{a.get('name')}` has no eval case; its definition can't be regression-tested")
+
+
+
+
+    def check_skills(self, org):
+        declared = {a.get("name") for a in org.get("agents", [])}
+        for skill, spec in (org.get("skills") or {}).items():
+            for agent_name in spec.get("agents", []):
+                if agent_name not in declared:
+                    self.err(f"skill `{skill}` is wired to `{agent_name}`, which is not a declared agent")
+                    continue
+                path = self.p(".claude", "agents", agent_name + ".md")
+                try:
+                    text = open(path, encoding="utf-8").read()
+                except OSError:
+                    continue  # missing agent file is already an error
+                if f"`{skill}`" not in text:
+                    self.warn(f"skill `{skill}` is wired to `{agent_name}` in org.json, but its agent "
+                              "file never names it, so the agent won't load it")
+            if not spec.get("fallback"):
+                self.warn(f"skill `{skill}` has no fallback: agents will fail silently where it isn't installed")
+
+    def check_playbooks(self, org):
+        pdir = self.p(org.get("playbooks", ".claude/ceo/playbooks"))
+        if not os.path.isdir(pdir):
+            self.err(f"playbooks directory {self.rel(pdir)} is missing; editors are told to follow one per item")
+            return
+        for kind in ("README",) + PLAYBOOK_KINDS:
+            if not os.path.exists(os.path.join(pdir, kind + ".md")):
+                self.err(f"playbook {self.rel(os.path.join(pdir, kind + '.md'))} is missing")
 
 
 def main():

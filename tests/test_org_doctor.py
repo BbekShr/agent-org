@@ -49,6 +49,8 @@ class DoctorTest(unittest.TestCase):
         for f in ("RULES.md", "backlog.md", "memory/codebase.md", "memory/retros.md", "memory/scorecard.md", "AUTONOMY.md", "PRINCIPLES.md"):
             write(self.root, f".claude/ceo/{f}", "# x\n")
         write(self.root, ".claude/ceo/learnings/_shared.md", "## Active\n- one\n\n## Archive\n")
+        for kind in ("README", "bug-fix", "perf", "feature", "refactor", "security-fix", "upgrade", "test-gap"):
+            write(self.root, f".claude/ceo/playbooks/{kind}.md", "# x\n")
         write(self.root, ".claude/ceo/evals/cases/c1.md", "---\nid: demo-1\nagent: demo-frontend-engineer\n---\n")
         os.makedirs(os.path.join(self.root, ".claude", "hooks"), exist_ok=True)
         shutil.copy(GUARD, os.path.join(self.root, ".claude", "hooks", "org_guard.py"))
@@ -144,6 +146,25 @@ class DoctorTest(unittest.TestCase):
     def test_fill_comment_left_in(self):
         write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="<!-- FILL: conventions -->"))
         self.assertError("FILL")
+
+    def test_missing_playbook(self):
+        os.remove(os.path.join(self.root, ".claude", "ceo", "playbooks", "perf.md"))
+        self.assertError("perf.md is missing")
+
+    def test_skill_wired_but_not_named_in_agent(self):
+        self.org["skills"] = {"ponytail": {"agents": ["demo-frontend-engineer"], "fallback": "say so"}}
+        self.save()
+        code, out = self.doctor()
+        self.assertEqual(code, 0, out)
+        self.assertTrue(any("never names it" in w for w in out["warnings"]), out["warnings"])
+        write(self.root, ".claude/agents/demo-frontend-engineer.md", agent("demo-frontend-engineer", body="Load `ponytail` first."))
+        code, out = self.doctor()
+        self.assertFalse(any("never names it" in w for w in out["warnings"]), out["warnings"])
+
+    def test_skill_wired_to_unknown_agent(self):
+        self.org["skills"] = {"taste-skill": {"agents": ["demo-ghost"], "fallback": "x"}}
+        self.save()
+        self.assertError("not a declared agent")
 
     def test_editor_without_eval_warns(self):
         os.remove(os.path.join(self.root, ".claude", "ceo", "evals", "cases", "c1.md"))

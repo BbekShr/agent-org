@@ -21,6 +21,10 @@ code that makes it safe.
      sanitization for rendered user/bot content, outbound fetchers (SSRF), file upload paths,
      public API/CORS, rate limiting (and whether it fails open or closed BY DESIGN). -->
 
+## Skills to load
+
+{{SKILLS_TO_LOAD}}
+
 ## Checklist (stay in scope; the brief names a diff or a perimeter)
 
 <!-- FILL: keep the items that fit this project's kind and rewrite the rest; e.g. for a CLI or
