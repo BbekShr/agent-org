@@ -260,6 +260,8 @@ existing agent's domain knowledge, backlog, learnings, or reports.
    existing hook already does a guard job (a gate-config edit guard, a Stop-hook typecheck), keep
    it, set the matching `org.json` option off (`gate_files: []` or `guard.stop_check.cmd: ""`), and
    register only the guard modes that add something. Never run two hooks that do the same job.
+   The `bash` and `edit` modes are always registered: `edit` also guards the org's control files
+   (`org.json`, `AUTONOMY.md`, `settings.json`, `.claude/hooks/`), which no existing hook covers.
 6. **Respect the project's own style rules** in everything you write into it (e.g. a "no em
    dashes" rule applies to copied `PRINCIPLES.md` too).
 

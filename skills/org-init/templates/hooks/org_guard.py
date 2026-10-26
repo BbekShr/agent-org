@@ -6,7 +6,8 @@
         Blocked only while an org run is active (the CEO's marker file, or AGENT_ORG_RUN=1 in
         headless runs): merging below L3, pushing to the base branch, and `git stash`. A human's
         own sessions in the repo are never restricted by the org's autonomy level.
-  edit  PreToolUse(Edit|Write|MultiEdit): refuse edits to files that define a quality gate.
+  edit  PreToolUse(Edit|Write|MultiEdit): refuse edits to files that define a quality gate, and
+        always to the org's own control files (CONTROL_FILES), whatever org.json says.
   stop  Stop: run the configured cheap check once per edit batch and surface its errors.
 
 Exit 2 blocks the tool call and sends stderr to the model. Policy lives in
@@ -25,6 +26,13 @@ ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
 # A command position: start of string, a shell separator, or a newline. Anchoring here keeps
 # the guard from firing on its own patterns quoted inside a commit message or PR body.
 CMD = r"(?:\A|[;&|(]|\n)\s*"
+
+# Files that control the org itself: the autonomy level, the guard's own policy and wiring.
+# Hard-coded rather than read from org.json, so an agent can't unprotect them by editing the list.
+CONTROL_FILES = (".claude/ceo/org.json", ".claude/ceo/AUTONOMY.md", ".claude/ceo/DEMOTED",
+                 ".claude/settings.json")
+CONTROL_DIRS = (".claude/hooks/",)
+LEVELS = ("L0", "L1", "L2", "L3", "L4")
 
 
 def load_org():
@@ -48,6 +56,23 @@ def org_run_active():
         return False
 
 
+def is_control_file(rel):
+    rel = rel.replace(os.sep, "/")
+    return rel in CONTROL_FILES or rel.startswith(CONTROL_DIRS)
+
+
+def effective_level(org):
+    """org.json's level, lowered by .claude/ceo/DEMOTED if present. The CEO demotes by creating
+    DEMOTED (creating is allowed, editing it is not), so an agent can lower the level, never raise it."""
+    level = str(org.get("autonomy_level", "L0")).upper()
+    try:
+        with open(os.path.join(ROOT, ".claude", "ceo", "DEMOTED")) as f:
+            demoted = f.read().strip().upper()[:2]
+    except OSError:
+        return level
+    return min(level, demoted) if demoted in LEVELS else "L0"
+
+
 def block(msg):
     sys.stderr.write("BLOCKED by .claude/hooks/org_guard.py: " + msg + "\n")
     return 2
@@ -66,10 +91,15 @@ def check_bash(cmd, org):
     if not org_run_active():
         return 0
     # Only during an org run: the autonomy level and shared-tree rules bind the org, not the human.
-    level = str(org.get("autonomy_level", "L0")).upper()
+    level = effective_level(org)
     if level < "L3" and re.search(CMD + r"gh\s+pr\s+merge\b", cmd):
         return block(f"autonomy_level is {level}: below L3 the human merges. Report the PR URL "
                      "instead. Only the human raises the level (.claude/ceo/org.json).")
+    control = "|".join(re.escape(p) for p in CONTROL_FILES + CONTROL_DIRS)
+    if re.search(CMD + r"(?:[^\n;&|]*>>?\s*|(?:sed|perl)\s+[^\n;&|]*-i\b[^\n;&|]*|(?:tee|cp|mv|rm|truncate)\b[^\n;&|]*)"
+                 r"(?:\./)?(?:" + control + ")", cmd):
+        return block("that command writes a file that controls the org itself (autonomy level, guard "
+                     "policy or hooks). Only the human edits it. To demote, create .claude/ceo/DEMOTED.")
     if re.search(CMD + r"git\s+push\b[^\n;&|]*\b" + base + r"\b[^\n;&|]*--force-with-lease", cmd) or \
             re.search(CMD + r"git\s+push\b[^\n;&|]*\s(?:origin\s+)?(?:HEAD:)?" + base + r"\s*(?:$|[;&|\n])", cmd):
         return block("an org run never pushes to the base branch. Push a work branch and open a PR.")
@@ -87,6 +117,12 @@ def check_edit(tool_input, org):
         return 0  # creating a file is fine
     rel = os.path.relpath(os.path.abspath(path), ROOT)
     allow = os.path.join(ROOT, ".claude", "ceo", "ALLOW_GATE_EDITS")
+    if is_control_file(rel):
+        if os.path.exists(allow):
+            return 0
+        return block(f"{rel} controls the org itself (autonomy level, guard policy or hooks). Only "
+                     "the human edits it; put the change under 'Needs a human' in the backlog. To "
+                     "demote after a revert, create .claude/ceo/DEMOTED containing the new level.")
     for gate_file in org.get("gate_files", []):
         if rel == gate_file or os.path.basename(rel) == gate_file:
             if os.path.exists(allow):

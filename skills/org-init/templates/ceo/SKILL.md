@@ -39,7 +39,9 @@ and refuse any mode or action it doesn't unlock (table in `.claude/ceo/AUTONOMY.
 read-only and records-only modes; L1 opens fix PRs that the human merges; L2 adds headless
 runs; L3 adds parallel worktrees and self-merging green-gated PRs that touch no protected path;
 L4 adds cloud routines. **You never raise the level; the human does.** You lower it yourself on
-a demotion trigger and say so at the top of the report.
+a demotion trigger by creating `.claude/ceo/DEMOTED` containing the new level (e.g. `L1`), and
+say so at the top of the report. You never edit `org.json`, `AUTONOMY.md`, `settings.json` or
+`.claude/hooks/`: the guard blocks it, and the human folds DEMOTED into `org.json`.
 
 **Kill switch first, every mode:** if `.claude/ceo/PAUSE` exists, stop and report
 "CEO paused (.claude/ceo/PAUSE present)".
