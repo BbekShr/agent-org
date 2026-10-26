@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>agent-org docs</title>
+  <meta name="description" content="How agent-org works: install, the first run, the team, the run cycle, the trust curve, the guard, evals, feedback, and reference.">
+  <meta name="theme-color" content="#0a7650">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.3.0/index.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script>try{var t=localStorage.getItem("agent-org-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./">agent<span>-</span>org</a>
+      <nav class="nav" aria-label="Main">
+        <a href="docs.html" aria-current="page">Docs</a>
+        <a class="hide-sm" href="#team">Team</a>
+        <a class="hide-sm" href="#trust-curve">Trust curve</a>
+        <a class="hide-xs" href="https://github.com/BbekShr/agent-org">GitHub</a>
+        <button class="theme-toggle" type="button">Theme: auto</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap docs">
+    <aside class="side" aria-label="Docs">
+      <details open>
+        <summary>On this page</summary>
+        <h4>Start</h4>
+        <a href="#introduction">Introduction</a>
+        <a href="#install">Install</a>
+        <a href="#first-run">Your first run</a>
+        <a href="#adopt">Adopt an existing org</a>
+        <h4>Concepts</h4>
+        <a href="#team">The team</a>
+        <a href="#cycle">The run cycle</a>
+        <a href="#trust-curve">The trust curve</a>
+        <a href="#guard">The guard</a>
+        <a href="#memory">Memory</a>
+        <a href="#playbooks">Skills and playbooks</a>
+        <a href="#evals">Evals</a>
+        <a href="#feedback">Feedback</a>
+        <h4>Reference</h4>
+        <a href="#commands">Commands</a>
+        <a href="#files">Generated files</a>
+        <a href="#org-json">org.json</a>
+        <a href="#faq">FAQ</a>
+      </details>
+    </aside>
+
+    <article class="content">
+      <h1 id="introduction">agent-org</h1>
+      <p class="lede">A CEO and a team of specialist agents for any repo, with autonomy earned on evidence.</p>
+      <p>agent-org is a Claude Code plugin. <code>/org-init</code> reads your codebase and generates an org fitted to it: agents that own real parts of your code, agents that only check, a CEO skill that runs them, and the guards, memory and evals that let the org earn more autonomy over time.</p>
+      <p>It is distilled from four production agent orgs: a 19k-entry web directory, an AI travel app, a photo-sharing app, and a chart library. The core idea, in one line: autonomy comes from verification, constraints, evals and orchestration, not from better prompts.</p>
+
+      <h2 id="install">Install</h2>
+      <p>As a Claude Code plugin:</p>
+      <div class="codeblock"><pre><code>/plugin marketplace add BbekShr/agent-org
+/plugin install agent-org@agent-org</code></pre><button class="copy" type="button">Copy</button></div>
+      <p>Without the plugin system, clone the repository and run <code>./install.sh</code>. It copies the four skills (<code>org-init</code>, <code>org-doctor</code>, <code>org-eval</code>, <code>org-feedback</code>) into <code>~/.claude/skills</code>.</p>
+
+      <h2 id="first-run">Your first run</h2>
+      <p>In the project you want an org for:</p>
+      <div class="codeblock"><pre><code>/org-init</code></pre><button class="copy" type="button">Copy</button></div>
+      <p><code>/org-init</code> works in phases. It reads the repo with four parallel scouts (stack and commands, architecture and code areas, risk surface, conventions and history), runs your existing checks once to set a baseline, and audits which of your rules are enforced by code and which only by prose. It asks you up to four questions (north star, org size, the autonomy you are aiming for, optional modes), shows the design, and generates everything on a branch. It never pushes without asking.</p>
+      <p>Then start read-only:</p>
+      <div class="codeblock"><pre><code>/&lt;project&gt;-ceo audit</code></pre><button class="copy" type="button">Copy</button></div>
+      <p>The audit writes a board report and changes nothing. When you are ready for fixes, run <code>/&lt;project&gt;-ceo</code> (a light run: the top 1 to 3 items, behind a PR).</p>
+      <div class="note"><p>Stop everything at any time with <code>touch .claude/ceo/PAUSE</code>. Every mode checks for it first.</p></div>
+
+      <h2 id="adopt">Adopt an existing org</h2>
+      <p>If the repo already has a hand-built CEO skill and agents, use <code>/org-init adopt</code>. It keeps your content (agents, backlog, learnings, reports) and adds only what is missing: <code>org.json</code>, the trust curve with a level backfilled from your real PR history, the scorecard, the guard, a verify skill, playbooks and eval cases. For each existing file it proposes the gaps as small, separate edits.</p>
+      <p>Adopt also checks that it will not break how you already work. On photobari it found that the maintainer's own sessions regularly merge PRs and push to main, so the guard's merge and push blocks were scoped to org runs only.</p>
+
+      <h2 id="team">The team</h2>
+      <p>The team is staffed from your repo's real structure. Every finding gets exactly one owner, and only builders can change code.</p>
+      <table>
+        <thead><tr><th>Group</th><th>Roles</th><th>Access</th></tr></thead>
+        <tbody>
+          <tr><td>CEO</td><td>The <code>/&lt;project&gt;-ceo</code> skill. Chief of staff: assesses, decides, briefs, verifies, ships.</td><td>coordinates</td></tr>
+          <tr><td>Builders</td><td>One editor per code area, named after your seams: frontend, backend, mobile, core, data, AI, prompt engineer.</td><td>write code</td></tr>
+          <tr><td>Checkers</td><td>Security engineer (always), release manager (always), reviewers one per lens, silent-failure hunter, critics for design, motion, accessibility or AI quality.</td><td>read-only</td></tr>
+          <tr><td>Scouts</td><td>Repro (always), bug hunter, R&amp;D and PM desk, app explorer, researcher and architect.</td><td>read-only</td></tr>
+        </tbody>
+      </table>
+      <p>Size scales the team: a small repo gets about 4 agents, a standard one 8 to 10, a large or high-stakes one more. Choosing a mode adds its role: <code>discover</code> adds a bug hunter, <code>e2e</code> an app explorer. Read-only agents carry no edit tools, and <code>/org-doctor</code> fails if one does.</p>
+      <h3>The security engineer</h3>
+      <p>Every org has one. It audits secrets, authentication and authorization, injection, data exposure, abuse limits and dependencies, tailored to the project's kind: a web app's checklist (roles, cross-user access, rate limits) is replaced with subprocess, prompt-injection and update-channel checks for a local CLI. It runs in every assess pass and on any diff that touches the security surface.</p>
+
+      <h2 id="cycle">The run cycle</h2>
+      <ol>
+        <li><b>Preflight.</b> Kill switch, clean tree, autonomy level, open PRs (no duplicate work), scorecard update, org self-check.</li>
+        <li><b>Assess.</b> Report-only specialists in parallel.</li>
+        <li><b>Decide.</b> Re-verify each finding at its <code>file:line</code>, rank by the objective function, cap a light run at 1 to 3 fixes.</li>
+        <li><b>Build.</b> The owning editor, with the playbook for that kind of change and a proving test, on a branch. Hard items get a read-only plan from the top model first.</li>
+        <li><b>Review and gate.</b> Adversarial reviewers (one per lens) and the release manager run together while the tree is frozen. The CEO's own design decisions are named as claims to attack. A diff that changes after verification is verified again.</li>
+        <li><b>Records, then PR.</b> Facts, lessons, the scorecard and a one-line retro, then the PR.</li>
+      </ol>
+
+      <h2 id="trust-curve">The trust curve</h2>
+      <table>
+        <thead><tr><th>Level</th><th>Unlocks</th><th>Who merges</th></tr></thead>
+        <tbody>
+          <tr><td>L0 Observe</td><td>Audits, discovery, R&amp;D proposals (records-only PRs)</td><td>you</td></tr>
+          <tr><td>L1 Verify</td><td>Fix PRs, one at a time</td><td>you, before merge</td></tr>
+          <tr><td>L2 Constrain</td><td>Adds scheduled headless runs</td><td>you, before merge</td></tr>
+          <tr><td>L3 Parallelize</td><td>Adds parallel worktrees</td><td>agents merge green PRs that touch no protected path; you sample after</td></tr>
+          <tr><td>L4 Cloud</td><td>Adds always-on cloud routines</td><td>as L3</td></tr>
+        </tbody>
+      </table>
+      <p>An org starts at L0 if its checks cannot prove a change correct, otherwise at L1, never higher. The CEO proposes a promotion when the scorecard meets the criteria (for L1 to L2: at least 5 runs, 80% of PRs landed without human edits, no reverts, no escaped defects). Only you raise the level, in <code>org.json</code>. A revert or an escaped defect drops it one level automatically.</p>
+
+      <h2 id="guard">The guard</h2>
+      <p><code>.claude/hooks/org_guard.py</code> is a small, dependency-free hook that runs before Bash commands and file edits.</p>
+      <ul>
+        <li><b>Always blocked:</b> <code>gh pr merge --admin</code>, force pushes without a lease, <code>--no-verify</code>, and edits to gate config files.</li>
+        <li><b>Blocked only during an org run:</b> merging below L3, pushing to the base branch, and <code>git stash</code> (the stash is shared by every worktree, and a stash mid-run once removed an agent's work from under it).</li>
+      </ul>
+      <p>A run is active while the CEO's marker file exists (it expires after 12 hours) or when <code>AGENT_ORG_RUN=1</code> is set for headless runs. Your own sessions are never bound by the org's level. A change that genuinely needs to strengthen a gate goes through you: you allow it for one run with <code>touch .claude/ceo/ALLOW_GATE_EDITS</code>.</p>
+
+      <h2 id="memory">Memory</h2>
+      <table>
+        <thead><tr><th>Store</th><th>Holds</th><th>Changed by</th></tr></thead>
+        <tbody>
+          <tr><td><code>CLAUDE.md</code>, <code>RULES.md</code></td><td>Rules</td><td>you (agents may propose)</td></tr>
+          <tr><td><code>backlog.md</code></td><td>Open work, one tracker</td><td>runs change status and add items; you own priorities</td></tr>
+          <tr><td><code>memory/</code>, <code>learnings/</code></td><td>Facts, lessons, retros, scorecard</td><td>the CEO, at the records step</td></tr>
+        </tbody>
+      </table>
+      <p>Every backlog item is a claim about code, and claims decay, so items are re-verified before a run acts on them. Only the short <code>## Active</code> list of lessons enters agent briefs; older lessons move to an archive instead of being deleted.</p>
+
+      <h2 id="playbooks">Skills and playbooks</h2>
+      <p>The org takes its taste and judgment from skills you already have installed, not from prose in its own files. <code>/org-init</code> wires each relevant skill to the roles that need it, by exact installed name, with a fallback for environments where it is missing: for example <code>ponytail</code> for every editor, a taste skill for the frontend editor and design critic, your framework's best-practices skills for the matching editor.</p>
+      <p>Seven playbooks (bug fix, perf, feature, refactor, security, upgrade, test gap) say how each kind of change is done well in this repo. The CEO names one in every brief. If Pstack is installed, the playbooks become thin project adapters on top of it.</p>
+      <p>A generated <code>/&lt;project&gt;-verify</code> skill is the org's runtime eyes and hands: how to set up, start, drive and inspect the real software (traces, heap snapshots, screenshots at each required width), so agents prove their own changes instead of a person relaying what happened.</p>
+
+      <h2 id="evals">Evals</h2>
+      <p><code>/org-eval</code> treats agents like code under test. Each case pins a commit, a neutral task and a rubric. The agent runs in a throwaway worktree with the current org laid over it, and a different model scores the result.</p>
+      <div class="codeblock"><pre><code>/org-eval                    # every case
+/org-eval &lt;agent&gt;            # one agent
+/org-eval &lt;agent&gt; --blind    # without the org's lessons
+/org-eval mine               # draft cases from past fix commits</code></pre><button class="copy" type="button">Copy</button></div>
+      <p>The best cases come free from history: check out the commit before a real fix and see whether the agent finds the bug. When a case comes from a bug the org has since learned from, the normal run is a regression test and <code>--blind</code> measures the agent itself. Report both.</p>
+
+      <h2 id="feedback">Feedback</h2>
+      <p>At each run's retro the CEO sorts friction into local (fixed in the project) and template (would happen in any org). Template findings go to <code>.claude/ceo/upstream.md</code>, a local file that never leaves your machine on its own.</p>
+      <p>Feedback is opt-in: set <code>"feedback": {"enabled": true}</code> in <code>org.json</code>, or say yes when <code>/org-init</code> asks. Then <code>/org-feedback</code> re-checks each finding against the current templates, merges duplicates, strips project names, paths, code and data, and drafts an issue (or a tested PR if you maintain agent-org). Nothing is posted until you approve the drafts.</p>
+
+      <h2 id="commands">Commands</h2>
+      <table>
+        <thead><tr><th>Command</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>/org-init</code></td><td>Generate an org for the current repo</td></tr>
+          <tr><td><code>/org-init adopt</code></td><td>Add the structure to an existing hand-built org, keeping its content</td></tr>
+          <tr><td><code>/org-init upgrade</code></td><td>Re-sync a generated org with newer templates, keeping local edits</td></tr>
+          <tr><td><code>/org-doctor</code></td><td>Static health check of the org</td></tr>
+          <tr><td><code>/org-eval</code></td><td>Grade agents on known-answer cases</td></tr>
+          <tr><td><code>/org-feedback</code></td><td>Opt-in: send template findings back to agent-org</td></tr>
+          <tr><td><code>/&lt;project&gt;-ceo</code></td><td>The CEO: <code>audit</code>, <code>deep</code>, <code>&lt;ID&gt;</code>, <code>triage "&lt;bug&gt;"</code>, <code>request "&lt;ask&gt;"</code>, plus <code>discover</code>, <code>rnd</code>, <code>issues</code>, <code>e2e</code> where chosen</td></tr>
+          <tr><td><code>/&lt;project&gt;-verify</code></td><td>Run, drive and inspect the real software</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="files">Generated files</h2>
+<pre><code>CLAUDE.md                         + a 4-line pointer (skipped if it ships to end users)
+.claude/
+  agents/&lt;slug&gt;-*.md              the team
+  skills/&lt;slug&gt;-ceo/SKILL.md      the orchestrator
+  skills/&lt;slug&gt;-verify/SKILL.md   runtime eyes and hands
+  hooks/org_guard.py              the guard
+  settings.json                   hooks merged in, existing settings kept
+  ceo/
+    org.json  RULES.md  backlog.md
+    memory/  learnings/  playbooks/  evals/
+    upstream.md                   template findings (local unless you opt in)
+    PRINCIPLES.md  AUTONOMY.md
+    bin/org_doctor.py</code></pre>
+
+      <h2 id="org-json">org.json</h2>
+      <p>The machine-readable org: what the doctor checks and the guard reads.</p>
+<pre><code>{
+  "project": "Photobari",
+  "slug": "photobari",
+  "autonomy_level": "L1",
+  "autonomy_target": "L2",
+  "gates": [{ "name": "typecheck", "cmd": "npm run typecheck", "cheap": true }],
+  "protected_paths": ["CLAUDE.md", ".github/workflows/**", "drizzle/**"],
+  "agents": [{ "name": "photobari-frontend-engineer", "access": "editor",
+               "perimeter": ["src/app/**", "src/components/**"], "except": ["src/app/api/**"] }],
+  "skills": { "ponytail": { "agents": ["photobari-frontend-engineer"],
+                            "when": "before writing code", "fallback": "apply RULES.md" } },
+  "feedback": { "enabled": false, "upstream": "BbekShr/agent-org" }
+}</code></pre>
+
+      <h2 id="faq">FAQ</h2>
+      <h3>Does it merge or deploy on its own?</h3>
+      <p>Not until you raise the org to L3, and never to a protected path. It never deploys to production or runs production migrations at any level.</p>
+      <h3>Will it change my CLAUDE.md?</h3>
+      <p>It appends a 4-line pointer, and skips even that if your <code>CLAUDE.md</code> ships to end users. The org's own rules live in <code>.claude/ceo/RULES.md</code>.</p>
+      <h3>What does it need to run?</h3>
+      <p>Claude Code, git, and Python 3 for the guard and the doctor (standard library only). <code>gh</code> is used for PRs when it is available.</p>
+      <h3>Why start so restricted?</h3>
+      <p>Because trust is earned on this codebase with these agents. The early runs build tests, bans and evals; throughput compounds once the org has earned L2 and L3.</p>
+    </article>
+  </div>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>agent-org, MIT license</span>
+      <span><a href="./">Home</a> &nbsp; <a href="https://github.com/BbekShr/agent-org">GitHub</a></span>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>

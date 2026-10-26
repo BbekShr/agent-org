@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>agent-org: a CEO and a team of agents for any repo</title>
+  <meta name="description" content="A Claude Code plugin that gives any repo a CEO and a team of specialist agents, with a review board, guardrails, evals, and autonomy earned on evidence.">
+  <meta property="og:title" content="agent-org">
+  <meta property="og:description" content="A CEO and a team of specialist agents for any repo, with autonomy earned on evidence.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0a7650">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.3.0/index.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script>try{var t=localStorage.getItem("agent-org-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./">agent<span>-</span>org</a>
+      <nav class="nav" aria-label="Main">
+        <a href="docs.html">Docs</a>
+        <a class="hide-sm" href="docs.html#team">Team</a>
+        <a class="hide-sm" href="docs.html#trust-curve">Trust curve</a>
+        <a class="hide-xs" href="https://github.com/BbekShr/agent-org">GitHub</a>
+        <button class="theme-toggle" type="button">Theme: auto</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <h1 class="rise">A CEO and a team for every repo.<br><span class="dim">Autonomy earned on evidence.</span></h1>
+          <p class="lead rise d2">Run <code>/org-init</code> in Claude Code. Get specialist agents, a review board, and guardrails fitted to your codebase.</p>
+          <div class="ctas rise d3">
+            <a class="btn btn-primary" href="docs.html#install">Get started</a>
+            <a class="btn" href="https://github.com/BbekShr/agent-org">View on GitHub</a>
+          </div>
+        </div>
+        <div class="install rise d2">
+          <h2>Install in Claude Code</h2>
+          <div class="codeblock">
+            <pre><code>/plugin marketplace add BbekShr/agent-org
+/plugin install agent-org@agent-org</code></pre>
+            <button class="copy" type="button">Copy</button>
+          </div>
+          <p>Then, inside your project:</p>
+          <div class="codeblock">
+            <pre><code>/org-init</code></pre>
+            <button class="copy" type="button">Copy</button>
+          </div>
+          <p>It reads the repo, asks up to four questions, and works on a branch. Nothing is pushed without asking.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats" role="list">
+      <div class="wrap">
+        <div class="stat" role="listitem"><b>4</b><span>production agent orgs it was distilled from</span></div>
+        <div class="stat" role="listitem"><b>46</b><span>rules, each one from a real incident</span></div>
+        <div class="stat" role="listitem"><b>12</b><span>agent roles, staffed from your repo's real structure</span></div>
+        <div class="stat" role="listitem"><b>10/10</b><span>on a real bug a human had to find by hand</span></div>
+      </div>
+    </div>
+
+    <section class="block" id="team">
+      <div class="wrap">
+        <h2>A team, not a chat window.</h2>
+        <p class="intro">Only builders can change code. Everyone else checks or scouts, with no edit tools at all, so a reviewer can never quietly fix what it was asked to judge.</p>
+        <div class="team">
+          <div class="cell ceo">
+            <h3>CEO</h3>
+            <p class="access">the /&lt;project&gt;-ceo skill</p>
+            <p>The chief of staff. It assesses, decides, writes the briefs, verifies through the review board and the release gate, and ships behind a PR. It does not do department work.</p>
+          </div>
+          <div class="cell builders">
+            <h3>Builders</h3>
+            <p class="access">write code</p>
+            <ul>
+              <li><b>One editor per code area</b><span>named after your seams, not a generic list</span></li>
+              <li><b>Frontend, backend, mobile</b><span>for apps with a client and a server</span></li>
+              <li><b>Core, data, AI, prompt engineer</b><span>for libraries, pipelines, model code, prompt files</span></li>
+            </ul>
+          </div>
+          <div class="cell checkers">
+            <h3>Checkers</h3>
+            <p class="access">read-only</p>
+            <ul>
+              <li><b>Security engineer</b><span class="tag">always</span><span>secrets, auth, injection, data exposure, dependencies</span></li>
+              <li><b>Release manager</b><span class="tag">always</span><span>runs every gate in order, reports output verbatim</span></li>
+              <li><b>Reviewers</b><span>one per lens: correctness, regression, security, silent failure, performance</span></li>
+              <li><b>Silent-failure hunter</b><span>swallowed errors and writes nobody checked</span></li>
+              <li><b>Critics</b><span>design, motion, accessibility, AI quality, where they fit</span></li>
+            </ul>
+          </div>
+          <div class="cell scouts">
+            <h3>Scouts</h3>
+            <p class="access">read-only</p>
+            <ul>
+              <li><b>Repro</b><span>reproduces a bug report on main before anyone fixes it</span></li>
+              <li><b>Bug hunter</b><span>finds new bugs, one area and one lens at a time</span></li>
+              <li><b>R&amp;D and PM desk</b><span>proposes features with evidence</span></li>
+              <li><b>App explorer</b><span>drives the running app end to end</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="cycle">
+      <div class="wrap">
+        <h2>Every run follows the same cycle.</h2>
+        <p class="intro">Green gates are necessary, not sufficient. The review board exists for the defects no test can see.</p>
+        <ol class="cycle">
+          <li><b>Preflight</b><span>Kill switch, clean tree, autonomy level, open PRs, org health.</span></li>
+          <li><b>Assess</b><span>Report-only specialists, in parallel.</span></li>
+          <li><b>Decide</b><span>Re-verify each finding at file:line. Rank. Cap the run.</span></li>
+          <li><b>Build</b><span>The owning editor, a playbook, a proving test, a branch.</span></li>
+          <li class="board"><b>Review and gate</b><span>Adversarial lenses and the release gate together, on a frozen tree.</span></li>
+          <li><b>Records, then PR</b><span>Memory, scorecard, a retro line. Then the PR.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="block" id="trust">
+      <div class="wrap">
+        <h2>Autonomy is earned, one level at a time.</h2>
+        <p class="intro">An org starts where its tests can prove a change correct. Promotion needs scorecard evidence and your approval. A revert demotes it on its own.</p>
+        <div class="ladder">
+          <div class="rung"><b>L0</b><h3>Observe</h3><p>Audits, bug discovery, proposals. Records only.</p></div>
+          <div class="rung start"><b>L1</b><h3>Verify</h3><p>Fix PRs, one at a time. You merge.</p></div>
+          <div class="rung"><b>L2</b><h3>Constrain</h3><p>Adds scheduled headless runs.</p></div>
+          <div class="rung"><b>L3</b><h3>Parallelize</h3><p>Parallel worktrees. Agents merge green PRs; you sample after.</p></div>
+          <div class="rung"><b>L4</b><h3>Cloud</h3><p>Always-on routines, same gates.</p></div>
+        </div>
+        <p class="ladder-note">Most orgs start at L1. Only you raise the level. Every level keeps the same gates and the same review board: a level unlocks capabilities, never shortcuts.</p>
+      </div>
+    </section>
+
+    <section class="block" id="proof">
+      <div class="wrap proof">
+        <div class="text">
+          <h2>Measured, not claimed.</h2>
+          <p>Agents are tested like code. <code>/org-eval</code> checks out the commit before a real fix and asks the agent to review it, then a different model scores the answer.</p>
+          <p>This is the first run on photobari: a swipe bug in its photo viewer that every existing agent missed and a person found by hand the next morning.</p>
+        </div>
+        <div>
+          <div class="result pass">
+            <span class="score">10/10</span>
+            <h3>Reviewer, as generated</h3>
+            <p>Found the bug with the right lines and the fix that later shipped, plus three more defects that fix addressed.</p>
+          </div>
+          <div class="result fail">
+            <span class="score">5/10</span>
+            <h3>Same reviewer, without the org's lessons</h3>
+            <p>Right mechanism, wrong trigger. The lesson is what makes the difference, and the score shows it.</p>
+          </div>
+          <pre><code>$ python3 .claude/ceo/bin/org_doctor.py .
+info   autonomy L1 (target L2), 8 agents, 7 gates
+info   feedback: off
+warn   learnings/_shared.md: ## Active has 48 lines (&gt;40)
+
+0 error(s), 1 warning(s)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="guard">
+      <div class="wrap">
+        <h2>The shortcuts are blocked, not discouraged.</h2>
+        <p class="intro">A guard hook enforces the rules that matter. It binds the org, never you: your own sessions work as they always have.</p>
+        <div class="guard">
+          <div>
+            <h3>Blocked for everyone</h3>
+            <p class="who">Never right, whoever is driving.</p>
+            <ul>
+              <li><code>gh pr merge --admin</code></li>
+              <li>Force pushes without a lease</li>
+              <li><code>--no-verify</code> on commits and pushes</li>
+              <li>Edits to the files that define the gates</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Blocked during an org run</h3>
+            <p class="who">The autonomy level, enforced.</p>
+            <ul>
+              <li>Merging below L3</li>
+              <li>Pushing to the base branch</li>
+              <li><code>git stash</code>, which is shared by every worktree</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="learning">
+      <div class="wrap">
+        <h2>It gets better every run.</h2>
+        <p class="intro">Memory has owners and budgets, so lessons stay sharp instead of piling up.</p>
+        <dl class="loop">
+          <dt>Lessons</dt><dd>Agents report durable lessons; the CEO curates them. Only a short active list enters each brief.</dd>
+          <dt>Scorecard</dt><dd>Every PR's fate: landed clean, edited, reverted. It is the evidence for each promotion.</dd>
+          <dt>Evals</dt><dd>A bug a human had to find becomes a test case, so the same miss cannot happen silently again.</dd>
+          <dt>Feedback, opt-in</dt><dd>Problems with the templates themselves can go back to agent-org as an issue or PR, details stripped, sent only on your yes.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="block closing">
+      <div class="wrap row">
+        <div>
+          <h2>Start with an audit.</h2>
+          <p>Generate the org on a branch, run <code>/&lt;project&gt;-ceo audit</code>, and read the board report. It changes nothing.</p>
+        </div>
+        <a class="btn btn-primary" href="docs.html#install">Get started</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>agent-org, MIT license</span>
+      <span><a href="docs.html">Docs</a> &nbsp; <a href="https://github.com/BbekShr/agent-org">GitHub</a> &nbsp; <a href="https://github.com/BbekShr/agent-org/blob/main/skills/org-init/references/principles.md">Principles</a></span>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>
