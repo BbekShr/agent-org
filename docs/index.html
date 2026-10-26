@@ -8,11 +8,11 @@
   <meta property="og:title" content="agent-org">
   <meta property="og:description" content="A CEO and a team of specialist agents for any repo, with autonomy earned on evidence.">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#0a7650">
+  <meta name="theme-color" content="#0b0d0f">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/index.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.3.0/index.css">
   <link rel="stylesheet" href="assets/style.css">
-  <script>try{var t=localStorage.getItem("agent-org-theme");if(t&&t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <script>try{if(localStorage.getItem("agent-org-theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
 </head>
 <body>
   <header class="top">
@@ -23,7 +23,7 @@
         <a class="hide-sm" href="#how">How it works</a>
         <a class="hide-sm" href="#modes">Modes</a>
         <a class="hide-xs" href="https://github.com/BbekShr/agent-org">GitHub</a>
-        <button class="theme-toggle" type="button">Theme: auto</button>
+        <button class="theme-toggle" type="button">theme: dark</button>
       </nav>
     </div>
   </header>
@@ -32,15 +32,15 @@
     <section class="hero">
       <div class="wrap">
         <div>
-          <h1 class="rise">An agent team for your repo.<br><span class="dim">You merge until it earns more.</span></h1>
+          <h1 class="rise">An agent team for your repo.<br><span class="dim">You merge, <em>until it earns more.</em></span></h1>
           <p class="lead rise d2">Agents find bugs, fix them and open PRs. Reviewers can't edit code, a guard hook blocks the shortcuts, and every miss a human catches becomes a test.</p>
           <div class="ctas rise d3">
-            <a class="btn btn-primary" href="#how">See how it works</a>
+            <a class="btn btn-primary" href="#how">See a run</a>
             <a class="btn" href="https://github.com/BbekShr/agent-org">View on GitHub</a>
           </div>
         </div>
         <div class="install rise d2">
-          <h2>Install in Claude Code</h2>
+          <h2>install, in Claude Code</h2>
           <div class="codeblock">
             <pre><code>/plugin marketplace add BbekShr/agent-org
 /plugin install agent-org@agent-org</code></pre>
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <section class="block" id="how">
+    <section class="block reveal" id="how">
       <div class="wrap">
         <h2>One run, one team, start to finish.</h2>
         <p class="intro">You invoke the CEO. Read-only specialists find, one editor fixes, an adversarial board and the release gate judge, and a PR comes back to you. The team shown is what <code>/org-init</code> generates for a standard Next.js + Supabase app with a few bots, with the model each role runs on.</p>
@@ -75,31 +75,31 @@
           <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--text)"/></marker><marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
           <text x="40" y="52" font-size="12" font-weight="600" fill="var(--muted)" letter-spacing="0.08em">ONE RUN, WITH THE TEAM /org-init GENERATES FOR A NEXT.JS + SUPABASE APP</text>
           <text x="40" y="72" font-size="12" fill="var(--muted)">The CEO is a skill in your session: it orchestrates and never edits code. Model per role: judgment on the top tier, building and reviewing on the mid tier, mechanical work on the small tier.</text>
-          <rect x="40" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <rect x="40" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25" class="stage lit" style="--i:0"/>
           <text x="110.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">You</text>
           <text x="110.0" y="142" text-anchor="middle" font-size="12" font-family='"Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace' fill="var(--muted)">/&lt;project&gt;-ceo</text>
           <line x1="180" y1="128.0" x2="203" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="204" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <rect x="204" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25" class="stage" style="--i:1"/>
           <text x="274.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Preflight</text>
           <text x="274.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">kill switch, level, tree</text>
           <line x1="344" y1="128.0" x2="367" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="368" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <rect x="368" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25" class="stage" style="--i:2"/>
           <text x="438.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Assess</text>
           <text x="438.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">specialists, parallel</text>
           <line x1="508" y1="128.0" x2="531" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="532" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <rect x="532" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25" class="stage" style="--i:3"/>
           <text x="602.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Decide</text>
           <text x="602.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">re-verify, rank, cap</text>
           <line x1="672" y1="128.0" x2="695" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="696" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25"/>
+          <rect x="696" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="1.25" class="stage" style="--i:4"/>
           <text x="766.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Build</text>
           <text x="766.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">one editor, one branch</text>
           <line x1="836" y1="128.0" x2="859" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="860" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25"/>
+          <rect x="860" y="96" width="140" height="64" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.25" class="stage lit" style="--i:5"/>
           <text x="930.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">Review + gate</text>
           <text x="930.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">frozen tree</text>
           <line x1="1000" y1="128.0" x2="1023" y2="128.0" stroke="var(--text)" stroke-width="1.5" marker-end="url(#ah)"/>
-          <rect x="1024" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25"/>
+          <rect x="1024" y="96" width="140" height="64" rx="8" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.25" class="stage lit" style="--i:6"/>
           <text x="1094.0" y="122" text-anchor="middle" font-size="15" font-weight="600" fill="var(--text)">PR</text>
           <text x="1094.0" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">evidence section</text>
           <rect x="331.0" y="236" width="214" height="130" rx="8" fill="var(--raised)" stroke="var(--line)" stroke-width="1.25"/>
@@ -176,7 +176,7 @@
       </div>
     </section>
 
-    <section class="block" id="modes">
+    <section class="block reveal" id="modes">
       <div class="wrap">
         <h2>One CEO, ten modes.</h2>
         <p class="intro"><code>/&lt;project&gt;-ceo &lt;mode&gt;</code>. Every mode starts with preflight and ends with a report; apply modes end at a PR. The autonomy level decides which are open.</p>
@@ -196,7 +196,7 @@
       </div>
     </section>
 
-    <section class="block" id="trust">
+    <section class="block reveal" id="trust">
       <div class="wrap">
         <h2>Autonomy is earned, one level at a time.</h2>
         <p class="intro">An org starts where its tests can prove a change correct. Promotion needs scorecard evidence and your approval. A revert demotes it on its own.</p>
@@ -211,7 +211,7 @@
       </div>
     </section>
 
-    <section class="block" id="proof">
+    <section class="block reveal" id="proof">
       <div class="wrap proof">
         <div class="text">
           <h2>Measured, not claimed.</h2>
@@ -239,7 +239,7 @@ warn   learnings/_shared.md: ## Active has 48 lines (&gt;40)
       </div>
     </section>
 
-    <section class="block closing">
+    <section class="block closing reveal">
       <div class="wrap row">
         <div>
           <h2>Start with an audit.</h2>

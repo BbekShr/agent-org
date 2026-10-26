@@ -1,17 +1,17 @@
-// Theme toggle (auto -> light -> dark), copy buttons, and the docs sidebar on phones.
+// Theme toggle (dark <-> light), copy buttons, section reveal, and the docs sidebar on phones.
 (function () {
   var root = document.documentElement;
   var KEY = "agent-org-theme";
-  var order = ["auto", "light", "dark"];
+  var order = ["dark", "light"];
 
   function read() {
-    try { return localStorage.getItem(KEY) || "auto"; } catch (e) { return "auto"; }
+    try { return localStorage.getItem(KEY) === "light" ? "light" : "dark"; } catch (e) { return "dark"; }
   }
   function apply(mode) {
-    if (mode === "auto") root.removeAttribute("data-theme");
-    else root.setAttribute("data-theme", mode);
+    if (mode === "light") root.setAttribute("data-theme", "light");
+    else root.removeAttribute("data-theme");
     var btn = document.querySelector(".theme-toggle");
-    if (btn) btn.textContent = "Theme: " + mode;
+    if (btn) btn.textContent = "theme: " + mode;
   }
   apply(read());
 
@@ -36,6 +36,19 @@
       else copy.textContent = "Select and copy";
     }
   });
+
+  // Sections fade up as they arrive; with reduced motion the CSS leaves them visible.
+  var revealed = document.querySelectorAll(".reveal");
+  if (revealed.length && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+    revealed.forEach(function (el) { io.observe(el); });
+  } else {
+    revealed.forEach(function (el) { el.classList.add("in"); });
+  }
 
   // The docs sidebar ships open (desktop); collapse it on narrow screens.
   var side = document.querySelector(".side details");
