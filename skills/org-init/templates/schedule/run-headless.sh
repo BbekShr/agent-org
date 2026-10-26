@@ -4,6 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../../.."          # repo root
 MODE="${1:-light}"
+export AGENT_ORG_RUN=1   # the guard enforces the org-only rules for this whole run
 [ -f .claude/ceo/PAUSE ] && { echo "CEO paused (.claude/ceo/PAUSE present)"; exit 0; }
 # Never touch a human's work in progress: a dirty tree means a read-only audit, run in place,
 # with no checkout or pull (both would move or clobber that work).

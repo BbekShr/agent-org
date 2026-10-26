@@ -19,6 +19,7 @@ class Doctor:
     def __init__(self, root):
         self.root = os.path.abspath(root)
         self.user_data = []
+        self._tracked_all = None
         self.errors, self.warnings, self.info = [], [], []
 
     def p(self, *parts):
@@ -161,6 +162,14 @@ class Doctor:
         except (OSError, subprocess.SubprocessError):
             return False
 
+    def resolves(self, ref, from_file):
+        if os.path.exists(self.p(ref)) or os.path.exists(self.p(".claude", "ceo", ref)) \
+                or os.path.exists(os.path.join(os.path.dirname(from_file), ref)):
+            return True
+        if self._tracked_all is None:
+            self._tracked_all = self.tracked("**") or []
+        return any(f.endswith("/" + ref) for f in self._tracked_all)
+
     def check_refs(self, path, text):
         # Backticked repo-relative paths that should exist. Globs, placeholders, commands and
         # paths under .claude/ceo (created lazily: reports, walks, per-agent learnings) are skipped.
@@ -169,7 +178,7 @@ class Doctor:
                 continue
             if ref in self.user_data or any(ref.startswith(u.rstrip("*")) for u in self.user_data if u.endswith("*")):
                 continue  # user data is legitimately absent from a clean checkout
-            if not os.path.exists(self.p(ref)) and not self.ignored(ref):
+            if not self.resolves(ref, path) and not self.ignored(ref):
                 self.warn(f"{self.rel(path)}: references `{ref}`, which does not exist")
 
     def check_ceo(self, org, agents):
@@ -184,8 +193,17 @@ class Doctor:
         if fm is None or fm.get("name") != skill:
             self.err(f"CEO skill frontmatter name should be `{skill}`")
         slug = org.get("slug", "")
-        mentioned = set(re.findall(r"`(" + re.escape(slug) + r"-[a-z0-9-]+)`", text)) - {skill}
-        for name in sorted(mentioned - agents):
+        name_re = r"`(" + re.escape(slug) + r"-[a-z0-9-]+)`"
+        mentioned = set(re.findall(name_re, text)) - {skill}
+        skills_dir = self.p(".claude", "skills")
+        skill_names = set(os.listdir(skills_dir)) if os.path.isdir(skills_dir) else set()
+        # Only a name in dispatch context (a spawn/dispatch line or a team-table row) is a claim
+        # that an agent exists; memory names, skill names and prose mentions are not.
+        dispatched = set()
+        for line in text.splitlines():
+            if re.search(r"\b(spawn|dispatch|launch|hand (?:it|the)|send it)\b", line, re.I) or line.lstrip().startswith("| `"):
+                dispatched.update(re.findall(name_re, line))
+        for name in sorted(dispatched - agents - skill_names - {skill}):
             self.err(f"CEO skill dispatches `{name}`, which is not a declared agent")
         for name in sorted(agents - mentioned):
             self.warn(f"agent `{name}` is never mentioned by the CEO skill, so nothing dispatches it")
@@ -246,7 +264,10 @@ class Doctor:
             self.err(".claude/settings.json missing or unparsable, so the guard is not wired")
             return
         blob = json.dumps(settings.get("hooks", {}))
-        for mode in ("bash", "edit"):
+        # `edit` only matters when the guard owns gate files; an adopted org may leave that job to
+        # an existing hook (gate_files: []), and two hooks doing one job is worse than one.
+        modes = ("bash", "edit") if org.get("gate_files") else ("bash",)
+        for mode in modes:
             if f"org_guard.py\\\" {mode}" not in blob and f"org_guard.py {mode}" not in blob:
                 self.err(f"guard mode `{mode}` is not registered in .claude/settings.json hooks")
 

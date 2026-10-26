@@ -45,6 +45,9 @@ G2. **The guard is a tripwire, not a security boundary.** It stops accidents (a 
    reflexive `--admin`, an edit to the gate config) cheaply and loudly. A determined bypass via a
    shell redirect is possible, and it's a firing offence, not a loophole. Gate-strengthening work
    that must touch a gate file goes through the human (`ALLOW_GATE_EDITS`, created only by them).
+   The org's rules bind the org, not the human: merge-below-L3, push-to-base and stash blocks
+   apply only while a run is active (marker file or `AGENT_ORG_RUN=1`). Only the always-wrong
+   commands (`--admin`, non-lease force push, `--no-verify`) are blocked in every session.
 H. **Prefer collocated, agent-friendly structure.** One directory per feature, strong types, and
    explicit boundaries are what let a mid-tier model do the right thing. When the codebase fights
    agents, a deliberate refactor is a legitimate (big-rock) backlog item.
